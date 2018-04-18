@@ -21,4 +21,4 @@ plt.title('xGalvo')
 plt.show()
 
 
-print('bye')
+print('bye!')
