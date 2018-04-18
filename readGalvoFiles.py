@@ -1,6 +1,6 @@
 import numpy as np
 def readGalvoFiles(filename):
-    segSize = 12500
+    segSize = 50000
     data = np.fromfile(filename, dtype='>d')
     if np.size(data) % 2*segSize == 0:
         numIter = int(np.size(data)/segSize)
