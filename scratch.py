@@ -22,7 +22,7 @@ max_real_move = 8*0.0004
 
 
 # [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_off\10.glv')
-[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\10.glv')
+[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\Adam\PycharmProjects\galvos\Galvo Position Signals\motors_on\10.glv')
 T = 20/1500
 signal_freq = 1/T
 fs = 50000
@@ -35,7 +35,7 @@ butter_twoX3 = butter_lowpass_filter(twoX, signal_freq*5, fs, order=5)
 plt.figure()
 plt.suptitle('xGalvo')
 
-plt.subplot(211)
+plt.subplot(311)
 plt.title('Raw vs Filtered Data')
 plt.plot(twoX, label='raw')
 plt.plot(butter_twoX, label='cutoff=signal freq')
@@ -44,7 +44,7 @@ plt.plot(butter_twoX3, label='cutoff=5*signal freq')
 plt.legend()
 
 
-plt.subplot(212)
+plt.subplot(312)
 # plt.title('Filtered Data')
 # plt.plot(xGalvo)
 custom_xGalvo = custom_filter(xGalvo)
@@ -53,13 +53,18 @@ indices = indices_orig[~custom_xGalvo.mask]
 custom_xGalvo = custom_xGalvo[~custom_xGalvo.mask]
 
 resampled_custom_xGalvo = np.interp(indices_orig, indices, custom_xGalvo)
+butter_resample = butter_lowpass_filter(resampled_custom_xGalvo, signal_freq*5, fs, order=5)
 
 plt.plot(butter_lowpass_filter(xGalvo, signal_freq*5, fs, order=5), label='butter_orig')
-plt.plot(butter_lowpass_filter(resampled_custom_xGalvo, signal_freq*5, fs, order=5), label='butter_resampled')
+plt.plot(butter_resample, label='butter_resampled')
 plt.plot(resampled_custom_xGalvo, label='custom_filt')
 # plt.plot(butter_lowpass_filter(custom_xGalvo, signal_freq*5, fs, order=5), label='butter_custom')
 plt.legend()
 
+plt.subplot(313)
+#get deriv
+resample_grad = np.gradient(butter_resample)
+plt.plot(resample_grad)
 plt.show()
 
 
