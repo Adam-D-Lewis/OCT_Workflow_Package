@@ -11,5 +11,3 @@ def readGalvoFiles(filename):
         return [xGalvo, yGalvo]
     else:
         raise ValueError('The filename size isnt divisible by ' + str(2*segSize))
-
-    print('bye')
