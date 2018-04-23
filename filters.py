@@ -21,7 +21,6 @@ def single_point_freq_filter(data_array, single_point_change_threshold):
     return data_array_masked
 
 def interpolate_masked_data_array(ma_data_array):
-    ma_data_array = single_point_freq_filter(ma_data_array)
     indices_orig = np.ma.masked_array(range(np.size(ma_data_array)))
     indices = indices_orig[~ma_data_array.mask]
     ma_data_array = ma_data_array[~ma_data_array.mask]

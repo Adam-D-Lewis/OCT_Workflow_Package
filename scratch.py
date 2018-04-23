@@ -1,6 +1,7 @@
 import scipy.signal as sig
 import numpy as np
 import matplotlib.pyplot as plt
+from galvo_voltage_location_conversion import volt_to_mm, mm_to_volt
 from readGalvoFiles import readGalvoFiles
 from filters import butter_lowpass_filter
 #%matplotlib notebook
@@ -21,8 +22,13 @@ def custom_filter(data_array):
 max_real_move = 8*0.0004
 
 
-# [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_off\100.glv')
-[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\Adam\PycharmProjects\galvos\Galvo Position Signals\motors_on\100.glv')
+# [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_off\10.glv')
+# [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\Adam\PycharmProjects\galvos\Galvo Position Signals\motors_on\galvo_position_survey.glv')
+[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\galvo_position_survey.2d_dbl')
+xGalvo = xGalvo[150000:300000]
+yGalvo = yGalvo[150000:300000]
+xGalvo = volt_to_mm(xGalvo, 'x')
+yGalvo = volt_to_mm(yGalvo, 'y')
 T = 20/1500
 signal_freq = 1/T
 fs = 50000
@@ -54,10 +60,10 @@ custom_xGalvo = custom_xGalvo[~custom_xGalvo.mask]
 
 resampled_custom_xGalvo = np.interp(indices_orig, indices, custom_xGalvo)
 butter_resample = butter_lowpass_filter(resampled_custom_xGalvo, signal_freq*5, fs, order=5)
-
-plt.plot(butter_lowpass_filter(xGalvo, signal_freq*5, fs, order=5), label='butter_orig')
-plt.plot(butter_resample, label='butter_resampled')
+# plt.plot(xGalvo, label='orig')
+# plt.plot(butter_lowpass_filter(xGalvo, signal_freq*5, fs, order=5), label='butter_orig')
 plt.plot(resampled_custom_xGalvo, label='custom_filt')
+plt.plot(butter_resample, label='butter_resampled')
 # plt.plot(butter_lowpass_filter(custom_xGalvo, signal_freq*5, fs, order=5), label='butter_custom')
 plt.legend()
 
