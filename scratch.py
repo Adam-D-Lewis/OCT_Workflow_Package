@@ -9,8 +9,9 @@ from scipy.signal import butter, lfilter, freqz, filtfilt
 import matplotlib.pyplot as plt
 
 
-[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_off\100.glv')
+# [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_off\100.glv')
 # [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\AutoCutOCT\Galvo Position Signals\motors_on\10.glv')
+[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\JunkLogs\galvo.2d_dbl')
 
 plt.figure()
 plt.plot(yGalvo)
