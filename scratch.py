@@ -21,8 +21,8 @@ def custom_filter(data_array):
 max_real_move = 8*0.0004
 
 
-# [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_off\10.glv')
-[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\Adam\PycharmProjects\galvos\Galvo Position Signals\motors_on\10.glv')
+# [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_off\100.glv')
+[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\Adam\PycharmProjects\galvos\Galvo Position Signals\motors_on\100.glv')
 T = 20/1500
 signal_freq = 1/T
 fs = 50000
