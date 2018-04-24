@@ -1,4 +1,5 @@
 from scipy.signal import butter, lfilter, freqz, filtfilt
+from galvo_voltage_location_conversion import mm_to_volt
 import numpy as np
 
 def butter_lowpass(cutoff, fs, order=5): #don't import this one
@@ -14,7 +15,7 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
 
 def single_point_freq_filter(data_array, single_point_change_threshold):
     diff_first = np.abs(np.diff(data_array)) #2-1
-    diff_second = np.insert(diff_first[:-1], 0, 0)
+    diff_second = np.insert(diff_first[:-1], 0, diff_first[0])
     mx = np.logical_and(diff_first > single_point_change_threshold, diff_second > single_point_change_threshold)
     mx = np.append(mx, False)
     data_array_masked = np.ma.masked_array(data_array, mx)
@@ -27,10 +28,10 @@ def interpolate_masked_data_array(ma_data_array):
     ma_data_array = np.interp(indices_orig, indices, ma_data_array)
     return ma_data_array
 
-def filter_galvo_data(ma_data_array, galvo_speed, scanline_length_mm, fs=50000, single_point_change_threshold=0.0004, multiple=8):
+def filter_galvo_data(ma_data_array, galvo_speed, scanline_length_mm, fs=50000, multiple=8):
 
     # 1
-    threshold = single_point_change_threshold * multiple  # I can calculate the single_point_change threshold once I have a mm_voltage conversion function, delete 2nd to last param
+    threshold = np.abs((mm_to_volt(galvo_speed/fs, 'x') - mm_to_volt(0, 'x')) * multiple)
     ma_data_array = single_point_freq_filter(ma_data_array, threshold) # single point filter
 
     # 2

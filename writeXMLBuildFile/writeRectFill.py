@@ -21,7 +21,7 @@ def writeRectFill(file, pt1, pt2, hatch_spacing, scanDir='h'):
     yCrd.sort()
 
     if scanDir == "h":
-        for i, iterCrd in enumerate(np.arange(yCrd[1], yCrd[0]-hatch_spacing, -hatch_spacing)):
+        for i, iterCrd in enumerate(np.arange(yCrd[1], yCrd[0], -hatch_spacing)):
             if i % 2 == 0:
                 writeJmp(f, [xCrd[0], iterCrd])
                 writeJmp(f, [xCrd[1], iterCrd])
@@ -29,7 +29,7 @@ def writeRectFill(file, pt1, pt2, hatch_spacing, scanDir='h'):
                 writeJmp(f, [xCrd[1], iterCrd])
                 writeJmp(f, [xCrd[0], iterCrd])
     elif scanDir == "v":
-        for i, iterCrd in enumerate(np.arange(xCrd[1], xCrd[0]-hatch_spacing, -hatch_spacing)):
+        for i, iterCrd in enumerate(np.arange(xCrd[1], xCrd[0], -hatch_spacing)):
             if i % 2 == 0:
                 writeJmp(f, [iterCrd, yCrd[1]])
                 writeJmp(f, [iterCrd, yCrd[0]])
