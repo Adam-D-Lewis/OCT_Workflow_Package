@@ -19,19 +19,21 @@ def custom_filter(data_array):
     data_array_masked = np.ma.masked_array(data_array, mx)
     return data_array_masked
 
-max_real_move = 8*0.0004
+max_real_move = 10*0.0004
 
 
-# [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_off\10.glv')
+[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\12by12_0start.2d_dbl')
 # [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\Adam\PycharmProjects\galvos\Galvo Position Signals\motors_on\galvo_position_survey.glv')
-[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\galvo_position_survey.2d_dbl')
-xGalvo = xGalvo[150000:300000]
-yGalvo = yGalvo[150000:300000]
-xGalvo = volt_to_mm(xGalvo, 'x')
-yGalvo = volt_to_mm(yGalvo, 'y')
+# [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\galvo_position_survey.2d_dbl')
+# xGalvo = xGalvo[150000:300000]
+# yGalvo = yGalvo[150000:300000]
+# xGalvo = volt_to_mm(xGalvo, 'x')
+# yGalvo = volt_to_mm(yGalvo, 'y')
 T = 20/1500
 signal_freq = 1/T
 fs = 50000
+
+
 
 twoX = xGalvo[1145:2534]
 butter_twoX = butter_lowpass_filter(twoX, signal_freq, fs, order=5)
