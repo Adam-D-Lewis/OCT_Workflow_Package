@@ -44,4 +44,4 @@ def get_indices_of_data_for_visualization(galvo_data_filepath, scan_parameters_f
 
     index_list = np.reshape(index_list[-int(num_scans_to_view*2)-1:-1], (-1, 2))
 
-    return index_list
+    return index_list.tolist()
