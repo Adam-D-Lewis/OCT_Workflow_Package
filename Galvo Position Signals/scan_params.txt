@@ -1,0 +1,10 @@
+[Scan Parameters Filepath]
+galvo_speed 		= 1500 		#mm/s
+left_crd		= -6		#mm
+top_crd			= 6		#mm
+scan_width		= 12		#mm
+scan_height		= 12		#mm
+fs 			= 50000 	#Hz
+start_trim		= 2		#mm
+stop_trim		= 2		#mm
+hatch_spacing		= 0.03		#mm
