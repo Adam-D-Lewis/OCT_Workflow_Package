@@ -1,0 +1,16 @@
+﻿Build started 10/27/2015 11:26:09 AM.
+     1>Project "D:\IntensityOCT\trunk\FFT_CPP\FFTW.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /openmp /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt UT_FFTW_Wrapper.cpp
+         UT_FFTW_Wrapper.cpp
+     1>d:\intensityoct\trunk\fft_cpp\ut_fftw_wrapper.cpp(137): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\IntensityOCT\trunk\FFT_CPP\x64\Debug\FFTW.exe" /INCREMENTAL /NOLOGO "libfftw3f-3.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\IntensityOCT\trunk\FFT_CPP\x64\Debug\FFTW.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\IntensityOCT\trunk\FFT_CPP\x64\Debug\FFTW.lib" /MACHINE:X64 x64\Debug\main_test.obj
+         x64\Debug\UT_FFTW_Wrapper.obj
+            Creating library D:\IntensityOCT\trunk\FFT_CPP\x64\Debug\FFTW.lib and object D:\IntensityOCT\trunk\FFT_CPP\x64\Debug\FFTW.exp
+         FFTW.vcxproj -> D:\IntensityOCT\trunk\FFT_CPP\x64\Debug\FFTW.exe
+     1>Done Building Project "D:\IntensityOCT\trunk\FFT_CPP\FFTW.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.92

@@ -1,0 +1,6 @@
+D:\IntensityOCT\CS Projects\Nufern\Nufern Console\obj\Debug\Nufern Console.csprojResolveAssemblyReference.cache
+D:\IntensityOCT\CS Projects\Nufern\Nufern Console\obj\Debug\Nufern Console.exe
+D:\IntensityOCT\CS Projects\Nufern\Nufern Console\obj\Debug\Nufern Console.pdb
+D:\IntensityOCT\CS Projects\Nufern\Nufern Console.exe.config
+D:\IntensityOCT\CS Projects\Nufern\Nufern Console.exe
+D:\IntensityOCT\CS Projects\Nufern\Nufern Console.pdb

@@ -1,0 +1,23 @@
+﻿Build started 10/27/2015 11:28:59 AM.
+     1>Project "D:\IntensityOCT\trunk\FFT_CPP\FFTW.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Ox /Oi /Ot /GL /D _WINDLL /D _MBCS /Gm- /EHsc /MD /Zp16 /GS /Gy /fp:fast /Zc:wchar_t /Zc:forScope /Zc:inline /openmp /Fo"x64\Release DLL\\" /Fd"x64\Release DLL\vc140.pdb" /Gd /TP /errorReport:prompt UT_FFTW_Wrapper.cpp main_test.cpp
+         UT_FFTW_Wrapper.cpp
+     1>UT_FFTW_Wrapper.cpp(137): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+         main_test.cpp
+     1>main_test.cpp(26): warning C4244: '+=': conversion from '__int64' to 'int', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\IntensityOCT\trunk\FFT_CPP\x64\Release DLL\FFTW.dll" /NOLOGO "libfftw3f-3.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\IntensityOCT\trunk\FFT_CPP\x64\Release DLL\FFTW.pdb" /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\IntensityOCT\trunk\FFT_CPP\x64\Release DLL\FFTW.lib" /MACHINE:X64 /DLL "x64\Release DLL\main_test.obj"
+         "x64\Release DLL\UT_FFTW_Wrapper.obj"
+            Creating library D:\IntensityOCT\trunk\FFT_CPP\x64\Release DLL\FFTW.lib and object D:\IntensityOCT\trunk\FFT_CPP\x64\Release DLL\FFTW.exp
+         Generating code
+         2 of 99 functions ( 2.0%) were compiled, the rest were copied from previous compilation.
+           1 functions were new in current compilation
+           1 functions had inline decision re-evaluated but remain unchanged
+         Finished generating code
+         FFTW.vcxproj -> D:\IntensityOCT\trunk\FFT_CPP\x64\Release DLL\FFTW.dll
+     1>Done Building Project "D:\IntensityOCT\trunk\FFT_CPP\FFTW.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.19

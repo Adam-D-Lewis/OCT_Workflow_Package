@@ -1,0 +1,12 @@
+[SCAN_SETTINGS]
+Range = 4.000000
+Bits = 16.000000
+Clock = 1
+Channel = 0
+Trigger Slope = 0
+Trigger Source = 0
+Trigger Level = 150.000000
+A-Scans Per Transfer = 500
+B-Scans = 500
+A-Scans per B-Scan = 500
+Points Per A-Scan = 1344
