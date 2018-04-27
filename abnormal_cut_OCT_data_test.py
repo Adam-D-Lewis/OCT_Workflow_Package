@@ -12,15 +12,15 @@ galvo_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 4\galvo.
 scan_parameters_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\scan_params.txt'
 xml_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\12by12.xml'
 
-OCT_bin_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 3\8_42_30 AM 4-26-2018\data.bin'
-OCT_bin_savepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 3\mod_OCT_data\data_mod.bin'
+OCT_bin_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 4\8_44_35 AM 4-26-2018\data.bin'
+OCT_bin_savepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 4\mod_OCT_data\data_mod.bin'
 
 section_indices = get_indices_of_data_for_visualization(galvo_filepath, scan_parameters_filepath, xml_filepath)
-
+section_indices = np.asarray(section_indices)[0:8,:].tolist()
 #plot
 galvo_data = readGalvoFiles(galvo_filepath)
-y_data = galvo_data[1]
-galvo_data = galvo_data[0]
+y_data = galvo_data[1][:6600]
+galvo_data = galvo_data[0][:6600]
 filtered_galvo = filter_galvo_data(galvo_data, 1500, 12)
 filtered_y = filter_galvo_data(y_data, 1500, 12, 50000, 8)
 plt.figure()
@@ -40,17 +40,17 @@ plt.ylabel('Galvo Position Reading (mm)')
 plt.figure()
 plt.plot(y_data, label='raw')
 plt.plot(filtered_y, label='filt')
-plt.show()
+# plt.show()
 
 #read OCT_file
 OCT_data = read_OCT_bin_files(OCT_bin_filepath)
 mod_OCT_data = cut_OCT_data_to_indices(OCT_data, section_indices)
 
 #check if the same
-if np.array_equal(OCT_data[:,section_indices[0][0]:section_indices[0][0]+254], mod_OCT_data[:, 0:254]):
-    print(True)
-else:
-    raise('Blah!')
+# if np.array_equal(OCT_data[:,section_indices[0][0]:section_indices[0][0]+254], mod_OCT_data[:, 0:254]):
+#     print(True)
+# else:
+#     raise('Blah!')
 
 #save OCT file
 save_OCT_bin_file(mod_OCT_data, OCT_bin_savepath)

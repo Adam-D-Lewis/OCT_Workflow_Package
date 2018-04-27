@@ -2,7 +2,7 @@ import numpy as np
 def readGalvoFiles(filename):
     segSize = 50000
     data = np.fromfile(filename, dtype='>d')
-    if np.size(data) % 2*segSize == 0:
+    if np.size(data) % (2*segSize) == 0:
         numIter = int(np.size(data)/segSize)
         xGalvo, yGalvo = [], []
         for i in range(numIter):

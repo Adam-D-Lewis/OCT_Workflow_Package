@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from galvo_voltage_location_conversion import volt_to_mm
 
 # galvo_data_filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\12by12_0start.2d_dbl'
-galvo_data_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 1\galvo.2d_dbl'
+galvo_data_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 4\galvo.2d_dbl'
 scan_params_filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\scan_params.txt'
 xml_filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\Galvo Wobble Build Files\12by12.xml'
 indices = get_indices_of_data_for_visualization(galvo_data_filepath, scan_params_filepath, xml_filepath)
