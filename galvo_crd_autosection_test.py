@@ -6,15 +6,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from galvo_voltage_location_conversion import volt_to_mm
 
-# galvo_data_filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\12by12_0start.2d_dbl'
-galvo_data_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 4\galvo.2d_dbl'
-scan_params_filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\scan_params.txt'
-xml_filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\Galvo Wobble Build Files\12by12.xml'
-indices = get_indices_of_data_for_visualization(galvo_data_filepath, scan_params_filepath, xml_filepath)
+galvo_data_filepath = r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\Attempt 8\galvo.2d_dbl'
+# galvo_data_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 4\galvo.2d_dbl'
+# scan_params_filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\scan_params.txt'
+# xml_filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\Galvo Wobble Build Files\12by12.xml'
+xml_filepath = r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\Build Files\12by12.xml'
+# indices = get_indices_of_data_for_visualization(galvo_data_filepath, scan_params_filepath, xml_filepath)
 
-params = read_key_value_comment_file(scan_params_filepath)
+# params = read_key_value_comment_file(scan_params_filepath)
 raw_galvo_data = readGalvoFiles(galvo_data_filepath)[0]
-filtered_galvo_data = filter_galvo_data(raw_galvo_data, params['galvo_speed'], params['scan_width'], params['fs'], multiple=8)
+filtered_galvo_data = filter_galvo_data(raw_galvo_data, 1500, 12, fs=50000, multiple=8)
 
 raw_galvo_data = volt_to_mm(raw_galvo_data, 'x')
 filtered_galvo_data = volt_to_mm(filtered_galvo_data, 'x')
@@ -22,11 +23,11 @@ filtered_galvo_data = volt_to_mm(filtered_galvo_data, 'x')
 plt.figure()
 plt.plot(raw_galvo_data, label='raw')
 plt.plot(filtered_galvo_data, label='filtered')
-for ind, index_pair in enumerate(indices):
-    if ind == 0:
-        plt.plot(range(index_pair[0], index_pair[1]), filtered_galvo_data[index_pair[0]:index_pair[1]], 'r', linewidth=3, label='autosectioned_indices')
-    else:
-        plt.plot(range(index_pair[0], index_pair[1]), filtered_galvo_data[index_pair[0]: index_pair[1]], 'r', linewidth=3)
+# for ind, index_pair in enumerate(indices):
+#     if ind == 0:
+#         plt.plot(range(index_pair[0], index_pair[1]), filtered_galvo_data[index_pair[0]:index_pair[1]], 'r', linewidth=3, label='autosectioned_indices')
+#     else:
+#         plt.plot(range(index_pair[0], index_pair[1]), filtered_galvo_data[index_pair[0]: index_pair[1]], 'r', linewidth=3)
 plt.legend()
 plt.title('Galvo Position Reading vs. Index')
 plt.xlabel('Index')
