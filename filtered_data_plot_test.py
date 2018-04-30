@@ -22,7 +22,7 @@ def custom_filter(data_array):
 max_real_move = 10*0.0004
 
 
-[xGalvo, yGalvo] = readGalvoFiles(r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 4\galvo.2d_dbl')
+[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\Attempt 7\galvo.2d_dbl')
 # [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\Adam\PycharmProjects\galvos\Galvo Position Signals\motors_on\galvo_position_survey.glv')
 # [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\galvo_position_survey.2d_dbl')
 # xGalvo = xGalvo[150000:300000]

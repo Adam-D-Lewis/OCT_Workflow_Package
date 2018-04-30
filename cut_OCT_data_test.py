@@ -8,12 +8,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #read galvo file and get indices
-galvo_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 4\galvo.2d_dbl' #FIX - need to write the number of points in each file somewhere
+galvo_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 8\galvo.2d_dbl' #FIX - need to write the number of points in each file somewhere
 scan_parameters_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\scan_params.txt'
 xml_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\12by12.xml'
 
-OCT_bin_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 3\8_42_30 AM 4-26-2018\data.bin'
-OCT_bin_savepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 3\mod_OCT_data\data_mod.bin'
+OCT_bin_filepath = r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\Attempt 8\4_06_15 PM 4-30-2018\data.bin'
+OCT_bin_savepath = r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\Attempt 8\4_06_15 PM 4-30-2018\data_mod.bin'
 
 section_indices = get_indices_of_data_for_visualization(galvo_filepath, scan_parameters_filepath, xml_filepath)
 
@@ -23,6 +23,7 @@ y_data = galvo_data[1]
 galvo_data = galvo_data[0]
 filtered_galvo = filter_galvo_data(galvo_data, 1500, 12)
 filtered_y = filter_galvo_data(y_data, 1500, 12, 50000, 8)
+
 plt.figure()
 plt.plot(galvo_data, label='raw')
 plt.plot(filtered_galvo, label='filtered')
