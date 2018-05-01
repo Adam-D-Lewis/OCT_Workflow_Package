@@ -1,4 +1,5 @@
 import numpy as np
+from resample_scanline import resample_scanline
 
 def cut_OCT_data_to_indices(OCT_data, indices):
     max_diff = int(np.max(np.diff(indices)))

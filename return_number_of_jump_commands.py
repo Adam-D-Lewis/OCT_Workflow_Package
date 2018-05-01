@@ -1,6 +1,5 @@
 import xml.etree.ElementTree as ET
 from os import path
-import matplotlib.pyplot as plt
 import numpy as np
 
 def return_number_of_jump_commands(xml_filepath):
