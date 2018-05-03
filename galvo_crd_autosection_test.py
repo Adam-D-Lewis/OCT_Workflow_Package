@@ -1,6 +1,6 @@
 from get_indices_of_data_for_visualization import get_indices_of_data_for_visualization
 from read_key_value_coment_file import read_key_value_comment_file
-from readGalvoFiles import readGalvoFiles
+from readGalvoFiles import read_galvo_files
 from filters import filter_galvo_data
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,7 +14,7 @@ xml_filepath = r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\Build Fil
 # indices = get_indices_of_data_for_visualization(galvo_data_filepath, scan_params_filepath, xml_filepath)
 
 # params = read_key_value_comment_file(scan_params_filepath)
-raw_galvo_data = readGalvoFiles(galvo_data_filepath)[0]
+raw_galvo_data = read_galvo_files(galvo_data_filepath)[0]
 filtered_galvo_data = filter_galvo_data(raw_galvo_data, 1500, 12, fs=50000, multiple=8)
 
 raw_galvo_data = volt_to_mm(raw_galvo_data, 'x')

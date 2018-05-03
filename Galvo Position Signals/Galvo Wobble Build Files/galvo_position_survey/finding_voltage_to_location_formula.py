@@ -1,7 +1,7 @@
 import scipy.signal as sig
 import numpy as np
 import matplotlib.pyplot as plt
-from readGalvoFiles import readGalvoFiles
+from readGalvoFiles import read_galvo_files
 from filters import filter_galvo_data
 
 #inputs
@@ -10,7 +10,7 @@ from filters import filter_galvo_data
 #x_loc, y_loc
 
 #just for now
-[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\galvo_position_survey.2d_dbl')
+[xGalvo, yGalvo] = read_galvo_files(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\galvo_position_survey.2d_dbl')
 xGalvo = xGalvo[150000:300000]
 yGalvo = yGalvo[150000:300000]
 

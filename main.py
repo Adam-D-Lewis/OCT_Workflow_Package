@@ -1,7 +1,7 @@
 import scipy.signal as sig
 import numpy as np
 import matplotlib.pyplot as plt
-from readGalvoFiles import readGalvoFiles
+from readGalvoFiles import read_galvo_files
 #%matplotlib notebook
 
 import numpy as np
@@ -64,7 +64,7 @@ plt.subplots_adjust(hspace=0.35)
 
 
 
-[xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\AutoCutOCT\Galvo Position Signals\motors_on\10.glv')
+[xGalvo, yGalvo] = read_galvo_files(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\AutoCutOCT\Galvo Position Signals\motors_on\10.glv')
 x_butter = butter_lowpass_filter(xGalvo, 3000, 471000, 5)
 
 plt.figure()

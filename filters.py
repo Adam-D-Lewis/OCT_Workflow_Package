@@ -32,10 +32,10 @@ def filter_galvo_data(ma_data_array, galvo_speed, scanline_length_mm, fs=50000, 
 
     # 1
     threshold = np.abs((mm_to_volt(galvo_speed/fs, 'x') - mm_to_volt(0, 'x')) * multiple)
-    ma_data_array = single_point_freq_filter(ma_data_array, threshold) # single point filter
+    ma_data_array = single_point_freq_filter(ma_data_array, threshold)  # single point filter
 
     # 2
-    ma_data_array = interpolate_masked_data_array(ma_data_array) # interpolate masked data array
+    ma_data_array = interpolate_masked_data_array(ma_data_array)  # interpolate masked data array
 
     # 3
     T = 2*scanline_length_mm / galvo_speed
