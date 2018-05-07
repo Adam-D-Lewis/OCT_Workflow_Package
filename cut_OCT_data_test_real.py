@@ -7,22 +7,24 @@ from filters import filter_galvo_data
 import numpy as np
 import matplotlib.pyplot as plt
 from galvo_voltage_location_conversion import volt_to_mm, mm_to_volt
-from resample_scanline2 import resample_scanline2
 from read_config_file import read_config_file
 from return_num_scanlines import return_num_scanlines
 from resample_and_cut_OCT_data import resample_and_cut_OCT_data
 from os import path
 import time
+from correct_B_scan_with_blank_A_scan import correct_B_scan_with_blank_A_scan
 
 #inputs
-galvo_filepath = path.abspath(r'D:\OCT Test\Attempt 10\galvo.2d_dbl') #FIX - need to write the number of points in each file somewhere
-scan_parameters_filepath = path.abspath(r'D:\OCT Test\scan_params.txt')
-xml_filepath = path.abspath(r'D:\OCT Test\12by12.xml') #optional, default value = None
+# galvo_filepath = path.abspath(r'D:\OCT Test\Attempt 10\galvo.2d_dbl') #FIX - need to write the number of points in each file somewhere
+galvo_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\first\galvo.2d_dbl')
+scan_parameters_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\scan_params.txt')
+xml_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\15by15.xml') #optional, default value = None
+blank_Ascan_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\blankA.bin')
 
-OCT_bin_filepath = path.abspath(r'D:\OCT Test\Attempt 10\4_34_12 PM 4-30-2018\data.bin')
-OCT_bin_savepath = path.abspath(r'D:\OCT Test\Attempt 10\4_34_12 PM 4-30-2018\data_mod.bin')
+OCT_bin_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\first\11_16_10 AM 5-4-2018\data.bin')
+OCT_bin_savepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\first\11_16_10 AM 5-4-2018\mod\data_mod.bin')
 
-plot_on = False
+plot_on = 0
 x_or_y = 'x'
 
 #open the galvo files, scan params files, xml_files, and OCT_data
@@ -40,6 +42,10 @@ with open(xml_filepath, 'r') as xml_file:
     section_indices = get_indices_of_data_for_visualization(x_galvo_filt, x_or_y, sp, xml_file=xml_file)
 OCT_data = read_OCT_bin_files(OCT_bin_filepath)
 
+#subtract out blank A-scan
+blankA = read_OCT_bin_files(blank_Ascan_filepath)
+# OCT_data = correct_B_scan_with_blank_A_scan(OCT_data, blankA)
+
 #plot
 if plot_on:
     plt.figure()
@@ -53,12 +59,13 @@ if plot_on:
     plt.ylabel('X Galvo Position Reading (mm)')
 
     plt.figure()
-    plt.plot(volt_to_mm(y_galvo, 'y'), label='raw')
+    # plt.plot(volt_to_mm(y_galvo, 'y'), label='raw')
     plt.plot(volt_to_mm(y_galvo_filt, 'y'), label='filtered')
     plt.legend()
     plt.title('Y Galvo Position Reading vs. Index')
     plt.xlabel('Index')
     plt.ylabel('Y Galvo Position Reading (mm)')
+
     plt.show()
 
 #cut the OCT data appropriately
@@ -67,5 +74,6 @@ mod_OCT_data = resample_and_cut_OCT_data(section_indices, x_galvo_filt, OCT_data
 t1 = time.time()
 dt = t1-t0
 print(dt)
+
 #save OCT file
 save_OCT_bin_file(mod_OCT_data, OCT_bin_savepath)

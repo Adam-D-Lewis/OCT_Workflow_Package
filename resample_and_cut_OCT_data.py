@@ -1,12 +1,12 @@
 import numpy as np
 from scipy import interpolate
-from resample_scanline import resample_scanline
-from multi_interp import multi_interp
 from galvo_voltage_location_conversion import mm_to_volt
 
 def resample_single_scanline(resampled_galvo, galvo_scanline, OCT_scanline):
-    return interpolate.interp1d(galvo_scanline, OCT_scanline)(resampled_galvo)
-
+    try:
+        return interpolate.interp1d(galvo_scanline, OCT_scanline)(resampled_galvo)
+    except:
+        print('ouch')
 # OCT_data = np.zeros((2048, 2))
 # OCT_data[:, 1] = 1
 # galvo_scanline = np.asarray([0, 1])

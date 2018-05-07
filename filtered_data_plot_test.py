@@ -2,7 +2,7 @@ import scipy.signal as sig
 import numpy as np
 import matplotlib.pyplot as plt
 from galvo_voltage_location_conversion import volt_to_mm, mm_to_volt
-from readGalvoFiles import read_galvo_files
+from read_galvo_files import read_galvo_files
 from filters import butter_lowpass_filter
 #%matplotlib notebook
 
@@ -22,7 +22,7 @@ def custom_filter(data_array):
 max_real_move = 10*0.0004
 
 
-[xGalvo, yGalvo] = read_galvo_files(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\Attempt 7\galvo.2d_dbl')
+xGalvo, yGalvo, _ = read_galvo_files(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\first\galvo.2d_dbl', 3, 50000)
 # [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\Adam\PycharmProjects\galvos\Galvo Position Signals\motors_on\galvo_position_survey.glv')
 # [xGalvo, yGalvo] = readGalvoFiles(r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\Galvo Position Signals\motors_on\galvo_position_survey.2d_dbl')
 # xGalvo = xGalvo[150000:300000]
@@ -43,13 +43,13 @@ butter_twoX3 = butter_lowpass_filter(twoX, signal_freq*5, fs, order=5)
 plt.figure()
 plt.suptitle('xGalvo')
 
-plt.subplot(311)
-plt.title('Raw vs Filtered Data')
-plt.plot(twoX, label='raw')
-plt.plot(butter_twoX, label='cutoff=signal freq')
-plt.plot(butter_twoX2, label='cutoff=3*signal freq')
-plt.plot(butter_twoX3, label='cutoff=5*signal freq')
-plt.legend()
+# plt.subplot(311)
+# plt.title('Raw vs Filtered Data')
+# plt.plot(twoX, label='raw')
+# plt.plot(butter_twoX, label='cutoff=signal freq')
+# plt.plot(butter_twoX2, label='cutoff=3*signal freq')
+# plt.plot(butter_twoX3, label='cutoff=5*signal freq')
+# plt.legend()
 
 
 plt.subplot(312)
@@ -69,10 +69,10 @@ plt.plot(butter_resample, label='butter_resampled')
 # plt.plot(butter_lowpass_filter(custom_xGalvo, signal_freq*5, fs, order=5), label='butter_custom')
 plt.legend()
 
-plt.subplot(313)
-#get deriv
-resample_grad = np.gradient(butter_resample)
-plt.plot(resample_grad)
+# plt.subplot(313)
+# #get deriv
+# resample_grad = np.gradient(butter_resample)
+# plt.plot(resample_grad)
 plt.show()
 
 

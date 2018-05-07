@@ -3,8 +3,8 @@ from write_oct_ec1000_file import write_oct_ec1000_file
 from os import path
 
 #Inputs
-scan_params_filepath = path.abspath(r'D:\OCT Test\scan_params.txt')
-ec1000_xml_savepath = path.abspath(r'D:\OCT Test\oct_scan.xml')
+scan_params_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\scan_params.txt')
+ec1000_xml_savepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\15by15.xml')
 
 #Read Folder
 config = configparser.ConfigParser()
