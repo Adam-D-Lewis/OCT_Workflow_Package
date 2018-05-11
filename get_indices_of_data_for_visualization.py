@@ -31,10 +31,12 @@ def get_indices_of_data_for_visualization(filt_galvo_data, x_or_y, scan_params, 
     num_scans_to_view = return_num_scanlines(xml_file=xml_file, scan_params=scan_params)
 
     # trim index list so we only keep the last num_scans_to_view indices
-    num_scans_to_view = 477
     index_list = index_list[-int(num_scans_to_view*2)-1:-1]
 
     # reshape and cast to list
-    index_list = np.reshape(index_list, (-1, 2)).tolist()
+    try:
+        index_list = np.reshape(index_list, (-1, 2)).tolist()
+    except:
+        index_list = np.reshape(index_list[:-1], (-1, 2)).tolist()
 
     return index_list

@@ -16,15 +16,22 @@ from correct_B_scan_with_blank_A_scan import correct_B_scan_with_blank_A_scan
 
 #inputs
 # galvo_filepath = path.abspath(r'D:\OCT Test\Attempt 10\galvo.2d_dbl') #FIX - need to write the number of points in each file somewhere
-galvo_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\first\galvo.2d_dbl')
-scan_parameters_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\scan_params.txt')
-xml_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\15by15.xml') #optional, default value = None
-blank_Ascan_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\blankA.bin')
 
-OCT_bin_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\first\11_16_10 AM 5-4-2018\data.bin')
-OCT_bin_savepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\first\11_16_10 AM 5-4-2018\mod\data_mod.bin')
+galvo_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\10-5-2-1\10-5-2-1 Logs\first\Layer 1\galvo_post.2d_dbl')
+scan_parameters_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\10-5-2-1\scan_params.txt')
+xml_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\10-5-2-1\post_OCT_xml\10-5-2-1_29x31.xml') #optional, default value = None
+# galvo_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\first\galvo.2d_dbl')
+# scan_parameters_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\first\scan_params.txt')
+# xml_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\Build Files\12by12\12by12.xml') #optional, default value = None
 
-plot_on = 0
+# blank_Ascan_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\blankA.bin')
+
+OCT_bin_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\10-5-2-1\10-5-2-1 Logs\first\Layer 1\12_26_57 PM 5-11-2018\data.bin')
+OCT_bin_savepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\10-5-2-1\10-5-2-1 Logs\first\Layer 1\12_26_57 PM 5-11-2018\data_mod.bin')
+# OCT_bin_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\first\3_24_40 PM 5-7-2018\data.bin')
+# OCT_bin_savepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\Galvo Signal\motors_on\OCT Test\first\3_24_40 PM 5-7-2018\data_mod.bin')
+
+plot_on = 1
 x_or_y = 'x'
 
 #open the galvo files, scan params files, xml_files, and OCT_data
@@ -43,7 +50,7 @@ with open(xml_filepath, 'r') as xml_file:
 OCT_data = read_OCT_bin_files(OCT_bin_filepath)
 
 #subtract out blank A-scan
-blankA = read_OCT_bin_files(blank_Ascan_filepath)
+# blankA = read_OCT_bin_files(blank_Ascan_filepath)
 # OCT_data = correct_B_scan_with_blank_A_scan(OCT_data, blankA)
 
 #plot
