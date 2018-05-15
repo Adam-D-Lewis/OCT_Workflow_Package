@@ -1,47 +1,34 @@
 import numpy as np
 from scipy import interpolate
 from galvo_voltage_location_conversion import mm_to_volt
+import mmap
 from joblib import Parallel, delayed
 import multiprocessing
+import configparser
+from read_config_file import read_config_file
+import time
 
 def resample_single_scanline(resampled_galvo, galvo_scanline, OCT_scanline):
-    try:
-        return interpolate.interp1d(galvo_scanline, OCT_scanline)(resampled_galvo)
-    except:
-        print('ouch')
-# OCT_data = np.zeros((2048, 2))
-# OCT_data[:, 1] = 1
-# galvo_scanline = np.asarray([0, 1])
-# resampled_galvo = np.asarray([0, 0.5, 1])
-#
-# answer = resample_single_scanline(resampled_galvo, galvo_scanline, OCT_data)
-# print('bye')
+    return interpolate.interp1d(galvo_scanline, OCT_scanline)(resampled_galvo)
 
-def loop_func(scan_index, data_index, max_length_scan_size, galvo_data, OCT_data, resampled_galvo, mod_OCT_data):
-    start_data_index = data_index[0]
+def loop_func(scan_index, data_index, max_length_scan_size, galvo_data, resampled_galvo, mod_OCT_data, OCT_bin_filepath):
     storage_index = [scan_index * max_length_scan_size, (scan_index + 1) * max_length_scan_size]
+    index_diff = data_index[1] - data_index[0]
 
     galvo_scanline = galvo_data[data_index[0] - 1:data_index[1] + 1]
-    OCT_scanline = OCT_data[:, data_index[0] - 1:data_index[1] + 1]
-    diff = np.diff(galvo_scanline)
-
-    # I might be able to do this without calculating diff and checking these condiditions (first scanline should be left to right (decreasing signal if voltage)
-    if np.all(diff < 0):
-        galvo_scanline = galvo_scanline[::-1]
-        OCT_scanline = OCT_scanline[:, ::-1]
-    elif np.all(diff > 0):
-        pass
-    else:
-        raise ('galvo_scanline is not strictly increasing or decreasing')
-
-    thing = resample_single_scanline(resampled_galvo, galvo_scanline, OCT_scanline)
-    mod_OCT_data[:, storage_index[0]:storage_index[1]] = thing
+    OCT_scanline = np.memmap(OCT_bin_filepath, dtype='>u2', mode='r', offset=2 * 2048 * (data_index[0] - 1), shape=(2048, index_diff + 2), order='F')
+    mod_OCT_data[:, storage_index[0]:storage_index[1]] = resample_single_scanline(resampled_galvo, galvo_scanline, OCT_scanline)
     return
 
-def resample_and_cut_OCT_data(indices, galvo_data, OCT_data, scan_param):
-
+def resample_and_cut_OCT_data(indices, galvo_data, scan_param, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_savepath, num_cores = 1):
     max_length_scan_size = int(np.max(np.diff(indices)))
-    print('max_length_scan_size is: ' + str(max_length_scan_size))
+
+    #save this value as the number of A-scans per B-scan
+    mod_OCT_params = configparser.ConfigParser()
+    mod_OCT_params.read(mod_OCT_parameters_savepath)
+    mod_OCT_params['SCAN_SETTINGS']['A-scans per B-Scan'] = str(max_length_scan_size)
+    with open(mod_OCT_parameters_savepath, 'w') as configfile:
+        mod_OCT_params.write(configfile)
 
     #resample galvo data
     left_trimd_crd = mm_to_volt(scan_param['left_crd']+scan_param['start_trim'], 'x')
@@ -50,29 +37,15 @@ def resample_and_cut_OCT_data(indices, galvo_data, OCT_data, scan_param):
 
     #allocate memory for modified OCT data
     num_segs = np.shape(indices)[0]
-    mod_OCT_data = np.zeros((2048, num_segs*max_length_scan_size), dtype='>u2')
+    mod_OCT_data = np.memmap(OCT_bin_savepath, dtype='>u2', mode='w+', offset=0, shape=(2048, num_segs*max_length_scan_size), order='F')
 
-    #process in parallel
-    num_cores = multiprocessing.cpu_count()
-    Parallel(n_jobs=num_cores)(delayed(loop_func)(scan_index, data_index, max_length_scan_size, galvo_data, OCT_data, resampled_galvo, mod_OCT_data) for scan_index, data_index in enumerate(indices))
-
-    # for scan_index, data_index in enumerate(indices):
-    #     start_data_index = data_index[0]
-    #     storage_index = [scan_index*max_length_scan_size, (scan_index+1)*max_length_scan_size]
-    #
-    #     galvo_scanline = galvo_data[data_index[0]-1:data_index[1]+1]
-    #     OCT_scanline = OCT_data[:, data_index[0]-1:data_index[1]+1]
-    #     diff = np.diff(galvo_scanline)
-    #
-    #     #I might be able to do this without calculating diff and checking these condiditions (first scanline should be left to right (decreasing signal if voltage)
-    #     if np.all(diff < 0):
-    #         galvo_scanline = galvo_scanline[::-1]
-    #         OCT_scanline = OCT_scanline[:,::-1]
-    #     elif np.all(diff > 0):
-    #         pass
-    #     else:
-    #         raise('galvo_scanline is not strictly increasing or decreasing')
-    #
-    #     thing = resample_single_scanline(resampled_galvo, galvo_scanline, OCT_scanline)
-    #     mod_OCT_data[:, storage_index[0]:storage_index[1]] = thing
-    return mod_OCT_data
+    # process in parallel
+    if num_cores == 1:
+        for scan_index, data_index in enumerate(indices):
+            loop_func(scan_index, data_index, max_length_scan_size, galvo_data, resampled_galvo, mod_OCT_data, OCT_bin_filepath)
+    else:
+        if multiprocessing.cpu_count() < num_cores:
+            num_cores = multiprocessing.cpu_count()
+        Parallel(n_jobs=num_cores)(
+            delayed(loop_func)(scan_index, data_index, max_length_scan_size, galvo_data, resampled_galvo, mod_OCT_data, OCT_bin_filepath) for scan_index, data_index in
+            enumerate(indices))

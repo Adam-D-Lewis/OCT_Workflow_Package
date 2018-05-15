@@ -17,7 +17,7 @@ xml_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\12by12.xml'
 OCT_bin_filepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 10\4_34_12 PM 4-30-2018\data.bin'
 OCT_bin_savepath = r'E:\OCT Data\2018-04-25 AutoSection Test Data\Attempt 10\4_34_12 PM 4-30-2018\data_mod.bin'
 
-section_indices = get_indices_of_data_for_visualization(galvo_filepath, scan_parameters_filepath, xml_filepath)
+section_indices = get_indices_of_data_for_visualization(galvo_filepath, scan_parameters_filepath, xml_filepath, )
 
 #plot
 galvo_data = read_galvo_files(galvo_filepath)
