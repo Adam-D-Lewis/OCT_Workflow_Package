@@ -193,7 +193,7 @@ def write_hdr(file):
 def write_laser_power(file, percentPower, comment=1):
     laserPowerNum = 4*percentPower #Perform conversion to EC1000 power (400 = 100%)
     if comment == 1:
-        file.write("<!-- Change Laser Power to "+str(int(laserPowerNum)/4)+"% -->\n")
+        file.write("<!-- Change Laser Power to "+str(int(laserPowerNum)/4)+" percent -->\n")
     file.write("<Set id='LaserPulse'>1," + str(int(laserPowerNum)) + ",400</Set>\n")
 
 

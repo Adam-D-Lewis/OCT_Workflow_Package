@@ -5,9 +5,9 @@ if __name__ == "__main__":
     import shutil
 
     #inputs
-    directory = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\10-5-2-1 Logs')
-    scan_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\scan_params.txt')
-    xml_filepath = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\post_OCT_xml\10-5-2-1_29x31.xml')
+    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_17_05_Square_Variations\make_sure_it_works')
+    scan_parameters_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_17_05_Square_Variations\scan_params.txt')
+    xml_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_17_05_Square_Variations\oct_scan\oct_scan.xml')
 
     for root, dirs, files in os.walk(directory):
         for file in files:
@@ -43,4 +43,4 @@ if __name__ == "__main__":
 
                 #autosection the file
                 print('autosectioning {}'.format(OCT_bin_filepath))
-                autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=12)
+                autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=8)

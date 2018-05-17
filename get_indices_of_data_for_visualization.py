@@ -29,8 +29,8 @@ def get_indices_of_data_for_visualization(filt_galvo_data, x_or_y, scan_params, 
         index_list.append(run_length_sum)
 
     num_scans_to_view = return_num_scanlines(xml_file=xml_file, scan_params=scan_params)
-    if num_scans_to_view*2 > len(index_list):
-        return []
+    # if num_scans_to_view*2 > len(index_list):
+    #     return []
 
     # trim index list so we only keep the last num_scans_to_view indices
     index_list = index_list[-int(num_scans_to_view*2)-1:-1]
