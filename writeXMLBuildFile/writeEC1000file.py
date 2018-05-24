@@ -525,17 +525,29 @@ def plot_xml(xml_filepath):
             xml_string = "<BeginJob>\n" + xml_string + "\n</BeginJob>"
             root = ET.fromstring(xml_string)
 
+        from matplotlib.patches import Circle, Wedge, Polygon
+        from matplotlib.collections import PatchCollection
+        plot_ind = [2, 80, 160, 246]
+        patches = []
         ec1000_commands = list(root)
         plt.figure()
-
-        for child in ec1000_commands:
+        plt.title(xml_filepath[-12:])
+        for i, child in enumerate(ec1000_commands):
             if child.tag.lower() == 'JumpAbs'.lower():
                 crd = child.text.split(',')
                 x, y = [float(number) for number in crd]
+                if i+1 in plot_ind:
+                    circle = Circle((x, y), .5)
+                    patches.append(circle)
             elif child.tag.lower() == 'MarkAbs'.lower():
                 crd = child.text.split(',')
                 x2, y2 = [float(number) for number in crd]
-                plt.plot([x, x2], [y, y2])
-                plt.title(xml_filepath[-12:])
+                if i in plot_ind:
+                    plt.plot([x, x2], [y, y2], linewidth=4)
+                else:
+                    plt.plot([x, x2], [y, y2])
+
                 # time.sleep(0.01)
+        p = PatchCollection(patches, alpha=1)
+        plt.gca().add_collection(p)
         plt.show()

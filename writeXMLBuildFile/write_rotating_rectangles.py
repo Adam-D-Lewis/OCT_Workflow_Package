@@ -30,14 +30,15 @@ if not os.path.exists(directory):
 with open(abspath(save_path), 'w') as fillFile:
     EC.write_laser_power(fillFile, 45, 0)
 
+
 for i in range(len(angles[0])):
     save_path = abspath(base_path + '/layer' + '{0:03d}'.format(i + 1) + '.xml')
     with open(abspath(save_path), 'w') as f:
         EC.write_laser_power(f, 75)
         for j in range(len(rects)):
-                EC.write_rotating_square(f, angles[j][i], rects[j][0], rects[j][1], hs=0.2794)
-                EC.write_comment(f, "Finished Rectangle")
-                if j == 2:
-                    print(angles[j][i])
+            EC.write_rotating_square(f, angles[j][i], rects[j][0], rects[j][1], hs=0.2794)
+            EC.write_comment(f, "Finished Rectangle")
+            # if j == 2:
+            #     print(angles[j][i])
     EC.plot_xml(save_path)
 
