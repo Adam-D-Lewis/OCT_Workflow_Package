@@ -1,4 +1,4 @@
-def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores):
+def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores, blankA_bin_filepath = None):
     # if __name__ == "__main__":
     #import statments
     from get_indices_of_data_for_visualization import get_indices_of_data_for_visualization
@@ -31,7 +31,7 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     # mod_OCT_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\10-5-2-1 Logs\Layer 10\3_07_15 PM 5-11-2018\parameters.oct_scan')
 
     # num_cores = 12
-    plot_on = 1
+    plot_on = 0
     x_or_y = 'x'
     #end of inputs
 
@@ -73,6 +73,6 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
 
     #cut the OCT data appropriately
     # t0 = time.time()
-    mod_OCT_data = resample_and_cut_OCT_data(section_indices, x_galvo_filt, sp, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=num_cores)
+    mod_OCT_data = resample_and_cut_OCT_data(section_indices, x_galvo_filt, sp, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=num_cores, blankA_bin_filepath=blankA_bin_filepath)
     # t1 = time.time()
     # print(t1-t0)

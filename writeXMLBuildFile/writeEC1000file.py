@@ -1,7 +1,15 @@
 # This is the module file to write EC1000 xml files
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+import time
 from os.path import abspath
 import numpy as np
 import math
+from scipy.optimize import minimize
+import xml.etree.ElementTree as ET
+from os import path
+import numpy as np
 
 def fmt_crd(crd):
     return str(format(crd, '.6f'))
@@ -266,3 +274,268 @@ def write_rect_outline(file, pt1, pt2):
     write_mrk(file, [xCrd[1], yCrd[1]])
     write_mrk(file, [xCrd[0], yCrd[1]])
 
+def write_rotating_square(file, angle_deg, pt1, pt2, hs=0.2794):
+    if angle_deg < 0:
+        raise("angle out of bounds")
+    angle_deg = angle_deg % 360
+    angle_rad = angle_deg*math.pi/180
+    x_bnds = sorted([pt1[0], pt2[0]])
+    y_bnds = sorted([pt1[1], pt2[1]])
+    bottom = y_bnds[0]
+    top = y_bnds[1]
+    left = x_bnds[0]
+    right = x_bnds[1]
+
+    m = angle_to_slope(angle_deg) #slope
+
+    if 90 < angle_deg <= 180:
+        #start at top, left
+        offset = abs(hs/math.cos(angle_rad)/2)
+        b1 = return_b_from_point_slope(left, top-offset, m)
+        b2 = b1
+        i = 0
+        while True:
+            i += 1
+            b_old = b2
+            if angle_deg == 90:
+                b2 = b2-hs*abs(1/math.sin(angle_rad))
+            else:
+                b2 = b2-hs*abs(1/math.cos(angle_rad))
+            if square_line_intersection(bottom, left, right, top, m, b2) == []:
+                break
+        b2 = b_old
+
+        # diff = b2 - b1
+        # ans = minimize(obj_func, 0.01*b1, args=(m, diff, left, top, right, bottom))
+        # b1 = ans.x[0]/0.01
+        # b2 = b1 + diff
+
+        # now I have b1, b2, and m
+        # b_vals = np.arange(b1, b2 - m * hs / 2, -m * hs)
+        b_vals = np.linspace(b1, b2, i)
+        intersecting_points = [square_line_intersection(bottom, left, right, top, m, b) for b in b_vals]
+        [pair.sort(key=lambda pair: pair[0]) for pair in intersecting_points]
+    elif 180 < angle_deg <= 270:
+        #start at top, right
+        offset = abs(hs/math.sin(angle_rad)/2)
+        if m == math.inf:
+            #now b1 is the x value
+            b1 = right-hs/2
+        else:
+            b1 = return_b_from_point_slope(right - offset, top, m)
+        b2 = b1
+        i = 0
+        while True:
+            i += 1
+            b_old = b2
+            if angle_deg == 270:
+                b2 = b2-hs*abs(1/math.sin(angle_rad))
+            else:
+                b2 = b2-hs*abs(1/math.cos(angle_rad))
+            if square_line_intersection(bottom, left, right, top, m, b2) == []:
+                break
+        b2 = b_old
+
+        # now I have b1, b2, and m
+        b_vals = np.linspace(b1, b2, i)
+        intersecting_points = [square_line_intersection(bottom, left, right, top, m, b) for b in b_vals]
+        [pair.sort(key=lambda pair: pair[1], reverse=True) for pair in intersecting_points]
+    elif 270 < angle_deg < 360 or angle_deg == 0:
+        #start at bottom, right
+        # offset = abs(hs/math.sin(angle_rad)/2)
+        offset = abs(hs/math.cos(angle_rad)/2)
+        b1 = return_b_from_point_slope(right, bottom+offset, m)
+        b2 = b1
+        i = 0
+        while True:
+            i += 1
+            b_old = b2
+            b2 = b2+hs*abs(1/math.cos(angle_rad))
+            if square_line_intersection(bottom, left, right, top, m, b2) == []:
+                break
+        b2 = b_old
+
+        # now I have b1, b2, and m
+        b_vals = np.linspace(b1, b2, i)
+        intersecting_points = [square_line_intersection(bottom, left, right, top, m, b) for b in b_vals]
+        [pair.sort(key=lambda pair: pair[0], reverse=True) for pair in intersecting_points]
+    elif 0 < angle_deg <= 90:
+        #start at bottom, left
+        offset = abs(hs/math.sin(angle_rad)/2)
+        if m == math.inf:
+            #now b1 is the x value
+            b1 = left+hs/2
+        else:
+            b1 = return_b_from_point_slope(left+offset, bottom, m)
+        b2 = b1
+        i = 0
+        while True:
+            i += 1
+            b_old = b2
+            if angle_deg == 90:
+                b2 = b2+hs*abs(1/math.sin(angle_rad))
+            else:
+                b2 = b2+hs*abs(1/math.cos(angle_rad))
+            if square_line_intersection(bottom, left, right, top, m, b2) == []:
+                break
+        b2 = b_old
+
+        # now I have b1, b2, and m
+        b_vals = np.linspace(b1, b2, i)
+        intersecting_points = [square_line_intersection(bottom, left, right, top, m, b) for b in b_vals]
+        [pair.sort(key=lambda pair: pair[0], reverse=True) for pair in intersecting_points]
+    else:
+        raise("angle_out of bounds")
+
+    for i, b in enumerate(b_vals[:-1]):
+        thing = dist_of_parallel_lines(m, b_vals[i], b_vals[i + 1])
+        if not (hs - 1E-6 < thing < hs + 1E-6):
+            print(thing)
+            raise ("error in hatch spacing of lines!")
+
+    #write mark and jumps
+    for i, pair in enumerate(intersecting_points):
+        write_jmp(file, pair[0])
+        write_mrk(file, pair[1])
+
+
+def obj_func(vars, m, diff, x1, y1, x2, y2):
+    # m, diff, x1, y1, x2, y2 = p[0], p[1], p[2], p[3], p[4], p[5]
+
+    #x1,y1 corresponds to first line (m,b1), x2,y2 corresponds to second line (m, b2)
+    b1 = vars/0.01
+    b2 = b1 + diff
+    d1 = perp_dist_of_line_and_point(m, b1, x1, y1)
+    d2 = perp_dist_of_line_and_point(m, b2, x2, y2)
+    ret_val = (d1 - d2)**2*1E6
+    return ret_val
+
+def angle_to_slope(angle_deg):
+#returns None if slope is infinite
+    if angle_deg < 0:
+        raise("Don't let this number be less than 0")
+    angle_deg = angle_deg % 360
+    if 0<=angle_deg<=180:
+        angle_deg = 180 - angle_deg
+    elif 180<angle_deg<360:
+        angle_deg = 360+180-angle_deg
+
+    if angle_deg == 90 or angle_deg == 270:
+        return math.inf
+    elif angle_deg == 180 or angle_deg == 0:
+        return 0
+    else:
+        angle_rad = angle_deg*math.pi/180
+        slope = math.tan(angle_rad)
+        return slope
+
+def return_b_from_point_slope(x, y, m):
+    #y = mx+b
+    return y-m*x
+
+def perp_dist_of_line_and_point(m, b, x, y):
+    p1 = np.asarray([0, b])
+    p2 = np.asarray([1, m+b])
+    p3 = np.asarray([x, y])
+    return np.abs(np.linalg.norm(np.cross(p2-p1, p1-p3))/np.linalg.norm(p2-p1))
+
+def dist_of_parallel_lines(m, b1, b2):
+    if m != math.inf:
+        return perp_dist_of_line_and_point(m, b1, 0, b2)
+    else:
+        return abs(b2-b1)
+
+def square_line_intersection(bottom, left, right, top, m, b):
+    #to input a vertical line, submit math.inf to m, and the value of x at b
+    # x = left
+    # x = right
+    # y = bottom
+    # y = top
+    # y = m*x + b
+
+    # initialize
+    x_intersect = []
+    y_intersect = []
+
+    #takes care of vertical lines
+    if m == math.inf:
+        if left<=b<=right:
+            y = [bottom, top]
+            x = [b, b]
+            intersecting_points_list = list(zip(x, y))
+            return intersecting_points_list
+        else:
+            return []
+
+    # takes care of horizontal lines
+    if m == 0:
+        #takes care of horizontal lines (m=0)
+        if bottom<=b<=top:
+            y = [b, b]
+            x = [left, right]
+            intersecting_points_list = list(zip(x, y))
+            return intersecting_points_list
+        else:
+            return []
+
+    #takes care of non-horizontal and non-vertical lines
+    #Find intersections
+    #left y = m*left + b
+    y = m*left+b
+    x = left
+    y_intersect.append(y)
+    x_intersect.append(x)
+    #right
+    y = m*right+b
+    x = right
+    y_intersect.append(y)
+    x_intersect.append(x)
+    #top, top = m*x + b
+    y = top
+    x = (top-b)/m
+    y_intersect.append(y)
+    x_intersect.append(x)
+    #bottom
+    y = bottom
+    x = (bottom-b)/m
+    y_intersect.append(y)
+    x_intersect.append(x)
+
+    #check if they are within the square
+    x_intersect = [float(e) for e in x_intersect]
+    y_intersect = [float(e) for e in y_intersect]
+    intersecting_points_list = [(x,y) for x,y in zip(x_intersect, y_intersect) if (left<=x<=right and bottom<=y<=top)]
+    #get rid of any duplicates by forming a set and then casting to a list so the all method works below
+    intersecting_points_list = {x for x in intersecting_points_list}
+
+    if not intersecting_points_list:
+        return []
+    elif len(intersecting_points_list) != 2:
+        raise("Error in Intersection Algorithm")
+
+    return list(intersecting_points_list)
+
+def plot_xml(xml_filepath):
+    with open(xml_filepath, 'r') as xml_file:
+        xml_string = xml_file.read()
+        try:
+            tree = ET.parse(xml_string)
+            root = tree.getroot()
+        except:  # if it doesn't have overarching tag, then add it
+            xml_string = "<BeginJob>\n" + xml_string + "\n</BeginJob>"
+            root = ET.fromstring(xml_string)
+
+        ec1000_commands = list(root)
+        plt.figure()
+
+        for child in ec1000_commands:
+            if child.tag.lower() == 'JumpAbs'.lower():
+                crd = child.text.split(',')
+                x, y = [float(number) for number in crd]
+            elif child.tag.lower() == 'MarkAbs'.lower():
+                crd = child.text.split(',')
+                x2, y2 = [float(number) for number in crd]
+                plt.plot([x, x2], [y, y2])
+                plt.title(xml_filepath[-12:])
+                # time.sleep(0.01)
+        plt.show()
