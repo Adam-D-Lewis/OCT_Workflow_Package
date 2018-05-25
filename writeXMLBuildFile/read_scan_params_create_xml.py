@@ -5,8 +5,8 @@ from os import path
 #Inputs
 # scan_params_filepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\scan_params.txt')
 # ec1000_xml_savepath = path.abspath(r'E:\OCT Data\2018-04-25 AutoSection Test Data\15by15\15by15.xml')
-scan_params_filepath = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\scan_params.txt')
-ec1000_xml_savepath = path.abspath(r'.\10-5-2-1_29x31.xml')
+scan_params_filepath = path.abspath(r'E:\OCT Data\2018-05-24 3PointBars\scan_params.txt')
+ec1000_xml_savepath = path.abspath(r'E:\OCT Data\2018-05-24 3PointBars\oct_scan\oct_scan.xml')
 
 #Read Folder
 config = configparser.ConfigParser()

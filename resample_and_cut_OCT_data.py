@@ -27,7 +27,7 @@ def loop_func(scan_index, data_index, max_length_scan_size, galvo_data, resample
             blankA_data = np.reshape(blankA_data, (2048, -1), 'F')
             blankA_data = np.mean(blankA_data, 1).astype('>u2')
             save_OCT_bin_file(blankA_data, blankA_bin_filepath)
-    OCT_scanline = subtract_blankA(OCT_scanline, blankA_data)
+        OCT_scanline = subtract_blankA(OCT_scanline, blankA_data)
     mod_OCT_data[:, storage_index[0]:storage_index[1]] = resample_single_scanline(resampled_galvo, galvo_scanline, OCT_scanline)
     # mod_OCT_data[:, storage_index[0]:storage_index[1]] = OCT_scanline[:, 1:1+stor_diff]
     return

@@ -527,7 +527,7 @@ def plot_xml(xml_filepath):
 
         from matplotlib.patches import Circle, Wedge, Polygon
         from matplotlib.collections import PatchCollection
-        plot_ind = [2, 80, 160, 246]
+        plot_ind = [None] #[2, 80, 160, 246]
         patches = []
         ec1000_commands = list(root)
         plt.figure()
@@ -550,4 +550,5 @@ def plot_xml(xml_filepath):
                 # time.sleep(0.01)
         p = PatchCollection(patches, alpha=1)
         plt.gca().add_collection(p)
+        plt.gca().set_aspect('equal')
         plt.show()
