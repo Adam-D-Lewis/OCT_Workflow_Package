@@ -39,7 +39,7 @@ def get_indices_of_data_for_visualization(filt_galvo_data, x_or_y, scan_params, 
     try:
         index_list = np.reshape(index_list, (-1, 2)).tolist()
     except:
-        index_list = np.reshape(index_list[:-1], (-1, 2)).tolist()
+        index_list = np.reshape(index_list[1:], (-1, 2)).tolist()
         raise ('dis be a problem?')
 
     # save this value as the number of A-scans per B-scan

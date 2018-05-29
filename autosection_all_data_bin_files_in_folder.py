@@ -4,12 +4,14 @@ if __name__ == "__main__":
     from autosection_OCT_data import autosection_OCT_data
     import shutil
     import time
+    # from joblib import Parallel, delayed
+    # import multiprocessing
 
     #inputs
-    directory = path.abspath(r'E:\OCT Data\2018-05-17 Square_Variations\Log_Files')
-    scan_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-17 Square_Variations\scan_params.txt')
-    xml_filepath = path.abspath(r'E:\OCT Data\2018-05-17 Square_Variations\oct_scan\oct_scan.xml')
-    blankA_bin_filepath = path.abspath(r'E:\OCT Data\2018-05-17 Square_Variations\blankA\2_43_27 PM 5-17-2018\data.bin')
+    directory = path.abspath(r'E:\OCT Data\2018-05-25 3PointBars\Log_Files\Post-Build\bar 2')
+    scan_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-25 3PointBars\oct_scan\scan_param_bar2.txt')
+    xml_filepath = path.abspath(r'E:\OCT Data\2018-05-25 3PointBars\oct_scan\2nd bar\oct_scan_bar2.xml')
+    blankA_bin_filepath = None #path.abspath(r'E:\OCT Data\2018-05-17 Square_Variations\blankA\2_43_27 PM 5-17-2018\data.bin')
 
     for root, dirs, files in os.walk(directory):
         for file in files:
@@ -45,5 +47,5 @@ if __name__ == "__main__":
                 #autosection the file
                 print('autosectioning {}'.format(OCT_bin_filepath))
                 t0 = time.time()
-                autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=12, blankA_bin_filepath=blankA_bin_filepath)
+                autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=8, blankA_bin_filepath=blankA_bin_filepath)
                 print(time.time()-t0)

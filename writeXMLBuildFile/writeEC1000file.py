@@ -124,7 +124,7 @@ def write_circ_fill(file, cntr, R, delta, scanDir):
             iterCrd = iterCrd - delta
 
 
-def write_circ_fill_squarely(file, cntr, R, space, delta, scanDir):
+def write_circ_fill_squarely(file, cntr, R, space, delta=.2794, scanDir='h'):
     """
     def writeCircFill(file, cntr, R, space, delta, scanDir):
         args:

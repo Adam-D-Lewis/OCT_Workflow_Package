@@ -31,7 +31,7 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     # mod_OCT_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\10-5-2-1 Logs\Layer 10\3_07_15 PM 5-11-2018\parameters.oct_scan')
 
     # num_cores = 12
-    plot_on = 0
+    plot_on = 1
     x_or_y = 'x'
     #end of inputs
 
@@ -52,7 +52,7 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     #plot
     if plot_on:
         plt.figure()
-        # plt.plot(volt_to_mm(x_galvo, x_or_y), label='raw')
+        plt.plot(volt_to_mm(x_galvo, x_or_y), label='raw')
         plt.plot(volt_to_mm(x_galvo_filt, x_or_y), label='filtered')
         for inds in section_indices:
             plt.plot(np.arange(inds[0], inds[1]), volt_to_mm(x_galvo_filt[inds[0]:inds[1]], x_or_y), 'r')

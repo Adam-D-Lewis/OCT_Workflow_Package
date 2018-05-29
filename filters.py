@@ -40,7 +40,7 @@ def filter_galvo_data(ma_data_array, galvo_speed, scanline_length_mm, fs=50000, 
     # 3
     T = 2*scanline_length_mm / galvo_speed
     signal_freq = 1 / T
-    cutoff_freq = 5*signal_freq
+    cutoff_freq = 20*signal_freq
 
     ma_data_array = butter_lowpass_filter(ma_data_array, cutoff_freq, fs, 5)
     return ma_data_array
