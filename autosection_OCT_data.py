@@ -31,7 +31,7 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     # mod_OCT_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\10-5-2-1 Logs\Layer 10\3_07_15 PM 5-11-2018\parameters.oct_scan')
 
     # num_cores = 12
-    plot_on = 1
+    plot_on = 0
     x_or_y = 'x'
     #end of inputs
 

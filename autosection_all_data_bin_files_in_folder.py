@@ -8,9 +8,9 @@ if __name__ == "__main__":
     # import multiprocessing
 
     #inputs
-    directory = path.abspath(r'E:\OCT Data\2018-05-25 3PointBars\Log_Files\Post-Build\bar 2')
-    scan_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-25 3PointBars\oct_scan\scan_param_bar2.txt')
-    xml_filepath = path.abspath(r'E:\OCT Data\2018-05-25 3PointBars\oct_scan\2nd bar\oct_scan_bar2.xml')
+    directory = path.abspath(r'E:\OCT Data\2018-05-23-Square-Rotations\Log_Files\Post-Build')
+    scan_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-23-Square-Rotations\scan_params.txt')
+    xml_filepath = path.abspath(r'E:\OCT Data\2018-05-23-Square-Rotations\oct_scan\oct_scan.xml')
     blankA_bin_filepath = None #path.abspath(r'E:\OCT Data\2018-05-17 Square_Variations\blankA\2_43_27 PM 5-17-2018\data.bin')
 
     for root, dirs, files in os.walk(directory):
