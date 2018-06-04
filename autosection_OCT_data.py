@@ -53,6 +53,7 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     if plot_on:
         plt.figure()
         # plt.plot(volt_to_mm(x_galvo, x_or_y), label='raw')
+        # plt.plot(volt_to_mm(x_galvo, x_or_y), 'g')
         plt.plot(volt_to_mm(x_galvo_filt, x_or_y), label='filtered')
         for inds in section_indices:
             plt.plot(np.arange(inds[0], inds[1]), volt_to_mm(x_galvo_filt[inds[0]:inds[1]], x_or_y), 'r')

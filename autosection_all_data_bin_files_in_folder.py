@@ -6,9 +6,9 @@ if __name__ == "__main__":
     import time
 
     #inputs
-    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_05_23_Square_Rotations\Log_Files\Layer 10')
-    scan_parameters_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_05_23_Square_Rotations\scan_params.txt')
-    xml_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_05_23_Square_Rotations\oct_scan\oct_scan.xml')
+    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\Log_Files\Post-Build\4')
+    scan_parameters_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\oct_scan\scan_param_bar4.txt')
+    xml_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\oct_scan\4th bar\oct_scan_bar4.xml')
     blankA_bin_filepath = None
 
     for root, dirs, files in os.walk(directory):
@@ -45,5 +45,5 @@ if __name__ == "__main__":
                 #autosection the file
                 print('autosectioning {}'.format(OCT_bin_filepath))
                 t0 = time.time()
-                autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=4, blankA_bin_filepath=blankA_bin_filepath)
+                autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=8, blankA_bin_filepath=blankA_bin_filepath)
                 print(time.time()-t0)
