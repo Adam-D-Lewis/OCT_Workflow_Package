@@ -29,7 +29,7 @@ def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer=2.25, 
     new_OCT_fs = 50000
     old_hatch = 0.03
     new_hatch = 0.03
-    b_scan_estimate = int(round((2060-old_delay*old_OCT_fs/512)*new_area/old_area*new_hatch/old_hatch+new_delay*new_OCT_fs/512, -1))
+    b_scan_estimate = int(round((2060-old_delay*old_OCT_fs/512)*new_area/old_area*new_hatch/old_hatch*1.05+new_delay*new_OCT_fs/512, -1))
 
     #write config file
     config = configparser.ConfigParser()
@@ -47,3 +47,6 @@ def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer=2.25, 
 
     with open(filename, 'w') as f:
         config.write(f)
+
+# filepath = r'C:\Users\adl628\Box Sync\Academics & Work\Research\Experiments\Galvos\oct_scan_large_xml_cylinder\oct_scan.xml'
+# write_scan_param_file_with_offset_data(filepath, (-13.75, 13.75), (13.75, -13.75))

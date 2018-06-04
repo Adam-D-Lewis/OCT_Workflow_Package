@@ -15,7 +15,7 @@ def resample_single_scanline(resampled_galvo, galvo_scanline, OCT_scanline):
 
 def loop_func(scan_index, data_index, max_length_scan_size, galvo_data, resampled_galvo, mod_OCT_data, OCT_bin_filepath, blankA_bin_filepath=None):
     if scan_index % 100 == 0:
-        print ('scan_index = {}'.format(scan_index))
+        print('scan_index is {}'.format(scan_index))
     storage_index = [scan_index * max_length_scan_size, (scan_index + 1) * max_length_scan_size]
     stor_diff = storage_index[1]-storage_index[0]
     index_diff = data_index[1] - data_index[0]
