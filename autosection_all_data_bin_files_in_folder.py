@@ -4,14 +4,12 @@ if __name__ == "__main__":
     from autosection_OCT_data import autosection_OCT_data
     import shutil
     import time
-    # from joblib import Parallel, delayed
-    # import multiprocessing
 
     #inputs
-    directory = path.abspath(r'E:\OCT Data\2018-05-23-Square-Rotations\Log_Files\Post-Build')
-    scan_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-23-Square-Rotations\scan_params.txt')
-    xml_filepath = path.abspath(r'E:\OCT Data\2018-05-23-Square-Rotations\oct_scan\oct_scan.xml')
-    blankA_bin_filepath = None #path.abspath(r'E:\OCT Data\2018-05-17 Square_Variations\blankA\2_43_27 PM 5-17-2018\data.bin')
+    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\Log_Files\Post-Build\4')
+    scan_parameters_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\oct_scan\scan_param_bar4.txt')
+    xml_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\oct_scan\4th bar\oct_scan_bar4.xml')
+    blankA_bin_filepath = None
 
     for root, dirs, files in os.walk(directory):
         for file in files:
