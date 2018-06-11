@@ -12,6 +12,7 @@ def get_indices_of_data_for_visualization(filt_galvo_data, x_or_y, scan_params, 
     voltage_range_values_to_keep = mm_to_volt(mm_range_values_to_keep, x_or_y)
 
     # create mask
+
     filt_galvo_data = np.ma.masked_outside(filt_galvo_data, voltage_range_values_to_keep[0], voltage_range_values_to_keep[1])
 
     def run_identifier(data, stepsize=0):

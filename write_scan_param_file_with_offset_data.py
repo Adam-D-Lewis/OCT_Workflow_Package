@@ -1,7 +1,7 @@
 import configparser
 import numpy as np
 
-def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer=2.25, y_spacer=1.75, start_trim=1, stop_trim=1, offset_crd=(-0.25, 1.75)):
+def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer = 2.25, y_spacer = 1.75, start_trim = 1, stop_trim = 1, offset_crd = (-0.25, 1.75), new_hatch=0.03):
     # offset is the adjustment I should make to each crd, its -1 * the location of the OCT center when the galvos are at 0,0
 
     #account for offset
@@ -28,8 +28,7 @@ def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer=2.25, 
     old_OCT_fs = 50000
     new_OCT_fs = 50000
     old_hatch = 0.03
-    new_hatch = 0.03
-    b_scan_estimate = int(round((2060-old_delay*old_OCT_fs/512)*new_area/old_area*new_hatch/old_hatch*1.05+new_delay*new_OCT_fs/512, -1))
+    b_scan_estimate = int(round((2060-old_delay*old_OCT_fs/512)*new_area/old_area*(old_hatch/new_hatch)*1.05+new_delay*new_OCT_fs/512, -1))
 
     #write config file
     config = configparser.ConfigParser()
@@ -39,8 +38,8 @@ def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer=2.25, 
                                     'scan_height': str(y[1]-y[0]),
                                     'scan_width': str(x[1]-x[0]),
                                     'fs': str(50000),
-                                    'hatch_spacing': str(0.03),
-                                    'start_delay': 0.7,
+                                    'hatch_spacing': str(new_hatch),
+                                    'start_delay': 1.0,
                                     'start_trim': str(start_trim),
                                     'stop_trim': str(stop_trim),
                                     'num_b_scans_estimate': str(b_scan_estimate)}

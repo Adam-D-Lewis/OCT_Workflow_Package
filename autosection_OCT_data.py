@@ -45,15 +45,27 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     x_galvo_filt = filter_galvo_data(x_galvo, sp['galvo_speed'], sp['scan_width'], sp['fs'], multiple=8)
     y_galvo_filt = filter_galvo_data(y_galvo, sp['galvo_speed'], sp['scan_width'], sp['fs'], multiple=8)
 
-    with open(xml_filepath, 'r') as xml_file:
-        #get indices
-        section_indices = get_indices_of_data_for_visualization(x_galvo_filt, x_or_y, sp, mod_OCT_parameters_filepath, xml_file=xml_file)
+
+
+    try:
+        with open(xml_filepath, 'r') as xml_file:
+            #get indices
+            section_indices = get_indices_of_data_for_visualization(x_galvo_filt, x_or_y, sp, mod_OCT_parameters_filepath, xml_file=xml_file)
+    except:
+        plt.figure()
+        # plt.plot(volt_to_mm(_, x_or_y), label='laser_enable')
+        plt.plot(volt_to_mm(x_galvo, x_or_y), label='raw')
+        plt.plot(volt_to_mm(x_galvo_filt, x_or_y), label='filtered')
+        plt.legend()
+        plt.figure()
+        plt.plot(volt_to_mm(y_galvo_filt, 'y'), label='filtered_y')
+        plt.legend()
+        plt.show()
 
     #plot
     if plot_on:
         plt.figure()
-        # plt.plot(volt_to_mm(x_galvo, x_or_y), label='raw')
-        # plt.plot(volt_to_mm(x_galvo, x_or_y), 'g')
+        plt.plot(volt_to_mm(x_galvo, x_or_y), label='raw')
         plt.plot(volt_to_mm(x_galvo_filt, x_or_y), label='filtered')
         for inds in section_indices:
             plt.plot(np.arange(inds[0], inds[1]), volt_to_mm(x_galvo_filt[inds[0]:inds[1]], x_or_y), 'r')

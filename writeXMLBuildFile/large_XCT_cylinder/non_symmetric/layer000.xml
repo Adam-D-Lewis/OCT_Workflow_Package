@@ -1,5 +1,5 @@
-<!-- Change Laser Power to 75.0 percent -->
-<Set id='LaserPulse'>1,300,400</Set>
+<!-- Change Laser Power to 85.0 percent -->
+<Set id='LaserPulse'>1,340,400</Set>
 <JumpAbs>12.750000, 13.250000</JumpAbs>
 <MarkAbs>20.250000, 13.250000</MarkAbs>
 <JumpAbs>12.750000, 12.970600</JumpAbs>
