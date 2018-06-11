@@ -6,10 +6,10 @@ if __name__ == "__main__":
     import time
 
     #inputs
-    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\Log_Files\Post-Build\4')
-    scan_parameters_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\oct_scan\scan_param_bar4.txt')
-    xml_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018-05-25 3PointBars\oct_scan\4th bar\oct_scan_bar4.xml')
-    blankA_bin_filepath = None
+    # directory = path.abspath(r'C:\Software\Lamps_3DP_GIT\trunk\OCT\OCT_Manual_Mode\temporary_files')
+    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_06_09_Build Surface Probe\Log_Files')
+    blankA_bin_filepath = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_06_09_Build Surface Probe\blankA\7_02_51 PM 6-9-2018\data.bin')
+    # blankA_bin_filepath = None
 
     for root, dirs, files in os.walk(directory):
         for file in files:
@@ -28,6 +28,10 @@ if __name__ == "__main__":
                 for f in os.listdir(parent_dir):
                     if f.endswith(".2d_dbl"):
                         galvo_filepath = path.join(parent_dir, f)
+                    elif f.endswith(".oct_config"):
+                        scan_parameters_filepath = path.join(parent_dir, f)
+                    elif f.endswith(".xml"):
+                        xml_filepath = path.join(parent_dir, f)
 
                 # create cut dir if it doesn't exist
                 mod_dir = path.join(root, 'cut')
