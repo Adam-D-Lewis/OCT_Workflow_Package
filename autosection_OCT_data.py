@@ -31,7 +31,7 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     # mod_OCT_parameters_filepath = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\10-5-2-1 Logs\Layer 10\3_07_15 PM 5-11-2018\parameters.oct_scan')
 
     # num_cores = 12
-    plot_on = 1
+    plot_on = 0
     x_or_y = 'x'
     #end of inputs
 
@@ -45,8 +45,6 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     x_galvo_filt = filter_galvo_data(x_galvo, sp['galvo_speed'], sp['scan_width'], sp['fs'], multiple=8)
     y_galvo_filt = filter_galvo_data(y_galvo, sp['galvo_speed'], sp['scan_width'], sp['fs'], multiple=8)
 
-
-
     try:
         with open(xml_filepath, 'r') as xml_file:
             #get indices
@@ -54,8 +52,8 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     except:
         plt.figure()
         # plt.plot(volt_to_mm(_, x_or_y), label='laser_enable')
-        plt.plot(volt_to_mm(x_galvo, x_or_y), label='raw')
-        plt.plot(volt_to_mm(x_galvo_filt, x_or_y), label='filtered')
+        plt.plot(volt_to_mm(x_galvo, x_or_y), label='raw_error')
+        plt.plot(volt_to_mm(x_galvo_filt, x_or_y), label='filtered_error')
         plt.legend()
         plt.figure()
         plt.plot(volt_to_mm(y_galvo_filt, 'y'), label='filtered_y')
