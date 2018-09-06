@@ -1,4 +1,3 @@
-from cut_OCT_data_to_indices import cut_OCT_data_to_indices
 from read_OCT_bin_files import read_OCT_bin_files
 from save_OCT_bin_file import save_OCT_bin_file
 from get_indices_of_data_for_visualization import get_indices_of_data_for_visualization

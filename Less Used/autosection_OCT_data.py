@@ -6,12 +6,10 @@ def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath,
     from filters import filter_galvo_data
     import numpy as np
     import matplotlib.pyplot as plt
-    from galvo_voltage_location_conversion import volt_to_mm, mm_to_volt
+    from galvo_voltage_location_conversion import volt_to_mm
     from read_config_file import read_config_file
     from return_num_scanlines import return_num_scanlines
     from resample_and_cut_OCT_data import resample_and_cut_OCT_data
-    from os import path
-    import time
 
     #inputs
     # galvo_filepath = path.abspath(r'E:\OCT Data\2018-05-11 Pore Detection\10-5-2-1\10-5-2-1 Logs\Layer 10\galvo_post.2d_dbl')

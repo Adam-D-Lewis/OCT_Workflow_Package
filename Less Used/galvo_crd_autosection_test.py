@@ -2,7 +2,6 @@ from get_indices_of_data_for_visualization import get_indices_of_data_for_visual
 from read_config_file import read_config_file
 from read_galvo_files import read_galvo_files
 from filters import filter_galvo_data
-import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt

@@ -1,10 +1,10 @@
-from typing import List, Union, Dict
 import matplotlib.pyplot as plt
 import numpy as np
 from filters import single_point_freq_filter, interpolate_masked_data_array, butter_lowpass_filter
 
-class GalvoData:
-    """
+
+class GalvoData():
+    """August 7, 2018
 
     Args:
 
@@ -38,6 +38,11 @@ class GalvoData:
         self._num_scanlines = None
         self._max_indices_per_scanline = None
         self.ltor_scanlines = None
+        self._pattern = None
+        self._b_scan_lengths = None
+        self._max_length_diff = None
+        self.sectioned_x_galvo_data_mm = None
+        self.sectioned_y_galvo_data_mm = None
         if file_path is None:
             pass
         else:
@@ -97,17 +102,49 @@ class GalvoData:
     def sectioned_indices_list(self, sectioned_indices_list):
         self._sectioned_indices_list = sectioned_indices_list
 
+    @property
+    def pattern(self):
+        if self._pattern is None:
+            self._find_pattern_b_scan()
+        return self._pattern
 
+    @pattern.setter
+    def pattern(self, pattern):
+        self._pattern = pattern
+
+
+    @property
+    def max_length_diff(self):
+        if self._max_length_diff is None:
+            self._max_length_diff = int(self._max_indices_per_scanline-self._min_indices_per_scanline)
+        return self._max_length_diff
+
+    @property
+    def filter_name(self):
+        """Name of filter applied to galvo data (unused currently)"""
+        return self._filter_name
+
+    @property
+    def b_scan_lengths(self):
+        if self._b_scan_lengths is None:
+            self._calc_b_scan_lengths()
+        return self._b_scan_lengths
+
+    def _calc_b_scan_lengths(self):
+        self._b_scan_lengths = [i[1]-i[0] for i in self._sectioned_indices_list]
 
     def plot(self):
         """plots the x and y galvo data"""
-        for set_ in [[self._x_data, self._x_filt], [self._y_data, self._y_filt]]:
+        for set_ in [['self._x_data', 'self._x_filt'], ['self._y_data', 'self._y_filt']]:
             assert set_ is not None, "{} is not defined".format(set_.__name__)
 
             plt.figure()
             for trace in set_:
-                plt.plot(trace)
-            plt.title(set_.__name__)
+                plt.plot(eval(trace))
+            plt.title(trace)
+            if trace == 'self._x_filt':
+                for indices in self.sectioned_indices_list:
+                    plt.plot(range(indices[0], indices[1]), self._x_filt[indices[0]:indices[1]], 'r')
         plt.show()
 
     def read_galvo_files(self, filename, num_channels=None, seg_size=None):
@@ -194,7 +231,23 @@ class GalvoData:
         """
         self._sectioned_indices_list = self._get_indices_of_data_for_visualization(self._x_filt, 'x', OCT_scan_config)
 
-    def _get_indices_of_data_for_visualization(self, filt_galvo_data, x_or_y, OCT_scan_config):
+    @staticmethod
+    def run_identifier(data, stepsize=0):
+        """
+
+        Args:
+            data: 
+            stepsize: 
+
+        Returns:
+            index_list: 
+
+        """
+        split_data = np.split(data, np.where(np.diff(data) != stepsize)[0] + 1)
+        run_lengths = np.asarray([np.size(elem) for elem in split_data])
+        return run_lengths
+
+    def _get_indices_of_data_for_visualization(self, filt_galvo_data, x_or_y, OCT_scan_config, tol_mm=0.2):
         """
 
         Args:
@@ -220,38 +273,37 @@ class GalvoData:
         # create mask
         filt_galvo_data = np.ma.masked_outside(filt_galvo_data, voltage_range_values_to_keep[0], voltage_range_values_to_keep[1])
 
-        def run_identifier(data, stepsize=0):
-            split_data = np.split(data, np.where(np.diff(data) != stepsize)[0] + 1)
-            return split_data
-
-        run_info = run_identifier(filt_galvo_data.mask, 0)
-        run_lengths = np.asarray([np.size(elem) for elem in run_info])
-
+        run_lengths = GalvoData.run_identifier(filt_galvo_data.mask, 0)
         index_list = []
         run_length_sum = 0
-        for i, val in np.ndenumerate(run_lengths):
+        for val in run_lengths:
             run_length_sum += val
-            index_list.append(run_length_sum)
+            index_list.append(run_length_sum-1)  # because index is 1 less than the length
 
-        # trim index list so we only keep the last num_scans_to_view indices
-        # index_list = index_list[-int(num_scanlines_expected * 2) - 1:-1]
+        index_list = np.asarray(index_list)
+        index_list = np.vstack((index_list[:-1], index_list[1:])).transpose()
+        filtered_index_list = []
+        first_found = False
+        for ind1, ind2 in index_list:
+            if not first_found:
+                if GalvoData.mm_to_volt(mm_range_values_to_keep[0] - tol_mm, x_or_y) < filt_galvo_data.data[ind1] < GalvoData.mm_to_volt(
+                        mm_range_values_to_keep[0] + tol_mm, x_or_y):
+                    if GalvoData.mm_to_volt(mm_range_values_to_keep[1] - tol_mm, x_or_y) < filt_galvo_data.data[ind2] < GalvoData.mm_to_volt(
+                            mm_range_values_to_keep[1] + tol_mm, x_or_y):
+                        first_found = True
+                        filtered_index_list.append(ind1)
+                        filtered_index_list.append(ind2)
+            else:
+                if GalvoData.mm_to_volt(mm_range_values_to_keep[0] - tol_mm, x_or_y) < filt_galvo_data.data[ind1] < GalvoData.mm_to_volt(mm_range_values_to_keep[0] + tol_mm, x_or_y):
+                    if GalvoData.mm_to_volt(mm_range_values_to_keep[1] - tol_mm, x_or_y) < filt_galvo_data.data[ind2] < GalvoData.mm_to_volt(mm_range_values_to_keep[1] + tol_mm, x_or_y):
+                        filtered_index_list.append(ind1)
+                        filtered_index_list.append(ind2)
+                elif GalvoData.mm_to_volt(mm_range_values_to_keep[1] - tol_mm, x_or_y) < filt_galvo_data.data[ind1] < GalvoData.mm_to_volt(mm_range_values_to_keep[1] + tol_mm, x_or_y):
+                    if GalvoData.mm_to_volt(mm_range_values_to_keep[0] - tol_mm, x_or_y) < filt_galvo_data.data[ind2] < GalvoData.mm_to_volt(mm_range_values_to_keep[0] + tol_mm, x_or_y):
+                        filtered_index_list.append(ind1)
+                        filtered_index_list.append(ind2)
 
-        # discard useless data at beginning
-        # figure out if I'm starting left, in the middle, or to the right of the area I want to image
-        if GalvoData.volt_to_mm(filt_galvo_data.data[0], x_or_y) < mm_range_values_to_keep[0]:
-            # starting to left of area to be imaged
-            pass
-        elif GalvoData.volt_to_mm(filt_galvo_data.data[0], x_or_y) > mm_range_values_to_keep[0]:
-            # starting to the right of the area to be imaged
-            index_list = index_list[2:]
-        elif mm_range_values_to_keep[0] <= GalvoData.volt_to_mm(filt_galvo_data.data[0], x_or_y) <= mm_range_values_to_keep[1]:
-            # starting in the area to be imaged
-            index_list = index_list[1:]
-        else:
-            raise Exception('Unknown error')
-
-        if np.size(index_list) % 2 != 0:
-            index_list = index_list[:-1]
+        index_list = filtered_index_list
 
         # reshape and cast to list
         index_list = np.reshape(index_list, (-1, 2)).tolist()
@@ -259,8 +311,14 @@ class GalvoData:
         # set number of scanlines
         self._num_scanlines = np.shape(index_list)[0]
         self._max_indices_per_scanline = int(np.max(np.diff(index_list)))
+        self._min_indices_per_scanline = int(np.min(np.diff(index_list)))
 
         return index_list
+
+    def _find_pattern_b_scan(self):
+        b_scan_num = np.argmax(self.b_scan_lengths)
+        galvo_data_indices = self._sectioned_indices_list[b_scan_num]
+        self._pattern = self._x_filt[galvo_data_indices[0]:galvo_data_indices[1]]
 
     def calc_num_left_to_right_scanlines(self):
         """This assumes that we fully captured the first scanline of the dataset
@@ -274,3 +332,28 @@ class GalvoData:
         else:
             self.ltor_scanlines = int(self.num_scanlines/2)
         return self.ltor_scanlines
+
+    @staticmethod
+    def adjust_to_pattern(cloth, run_val_and_length):
+        total_len = np.sum(run_val_and_length, axis=0)[1]
+        ind_list = []
+        # create ind_list
+        for i, vals in enumerate(run_val_and_length):
+            val, length = vals
+            if val < 0:
+                pass
+            elif val > 0:
+                ind_list.append([ind_list[-1, 1]+1, ind_list[-1, 1]+val+2])
+            else:
+                ind_list.append([ind_list[-1, 1]+1, ind_list[-1, 1]+length+1])
+
+        adjusted_cloth = np.zeros(shape=total_len)
+        length_sum = 0
+        for i, vals in enumerate(run_val_and_length):
+            val, length = vals
+            if val < 0:  # delete
+                pass
+            elif val > 0:
+                adjusted_cloth[ind_list[i, 0]: ind_list[i,1]-1] = [adjusted_cloth[-1]]*length
+            else:
+                adjusted_cloth[ind_list[i, 0]: ind_list[i,1]] = cloth

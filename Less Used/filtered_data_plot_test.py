@@ -1,13 +1,8 @@
-import scipy.signal as sig
-import numpy as np
-import matplotlib.pyplot as plt
-from galvo_voltage_location_conversion import volt_to_mm, mm_to_volt
 from read_galvo_files import read_galvo_files
 from filters import butter_lowpass_filter
 #%matplotlib notebook
 
 import numpy as np
-from scipy.signal import butter, lfilter, freqz, filtfilt
 import matplotlib.pyplot as plt
 
 #custom filter

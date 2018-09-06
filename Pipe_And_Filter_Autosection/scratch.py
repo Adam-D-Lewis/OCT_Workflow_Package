@@ -1,19 +1,8 @@
-from Pipe_And_Filter_Autosection.classes.GalvoData import GalvoData as GD
-from Pipe_And_Filter_Autosection.classes.FileManager import FileManager as FM
-from Pipe_And_Filter_Autosection.classes.ModOCTParameters import ModOCTParameters
-from os import path
-#testdir
-testdir = path.abspath(r'C:\Users\adl628\Desktop\test')
-mod_param_file = path.join(testdir, r'parameters.oct_scan')
+from Pipe_And_Filter_Autosection.classes.GalvoData import GalvoData
+from Pipe_And_Filter_Autosection.classes.FileManager import FileManager
+import matplotlib.pyplot as plt
 
-fm = FM()
-mod_OCT_parameters = ModOCTParameters(mod_param_file)
-
-print_heading = 'B-Scans'.lower()
-heading_val = mod_OCT_parameters.sp[print_heading]
-mod_OCT_parameters.sp[print_heading] = mod_OCT_parameters.sp[print_heading] + 1
-print(print_heading + ' is {} before modification'.format(heading_val))
-mod_OCT_parameters.write_to_file(print_heading, heading_val+1)
-print(print_heading + ' is {} after modification'.format(mod_OCT_parameters.sp[print_heading]))
-
-
+fm = FileManager()
+filepaths = [r'Z:\Adam\OCT ARL Tensile Bars\oct scan ec1000 files\full_build_area.xml', r'Z:\Adam\OCT ARL Tensile Bars\oct config files\full_build_area.oct_config']
+search_dir = r'Z:\Adam\OCT ARL Tensile Bars\Logs'
+fm.copy_files_to_rel_loc_of_filename(filepaths, '../', search_dir, 'data.bin')

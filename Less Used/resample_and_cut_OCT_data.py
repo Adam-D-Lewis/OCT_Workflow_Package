@@ -1,21 +1,18 @@
 import numpy as np
 from scipy import interpolate
 from galvo_voltage_location_conversion import mm_to_volt
-import mmap
 from joblib import Parallel, delayed
 import multiprocessing
 import configparser
 from save_OCT_bin_file import save_OCT_bin_file
-from read_config_file import read_config_file
-import time
 from subtract_blankA import subtract_blankA
 
 def resample_single_scanline(resampled_galvo, galvo_scanline, OCT_scanline):
     return interpolate.interp1d(galvo_scanline, OCT_scanline)(resampled_galvo)
 
 def loop_func(scan_index, data_index, max_length_scan_size, galvo_data, resampled_galvo, mod_OCT_data, OCT_bin_filepath, blankA_bin_filepath=None):
-    if scan_index % 100 == 0:
-        print('scan_index is {}'.format(scan_index))
+    # if scan_index % 100 == 0:
+    #     print('scan_index is {}'.format(scan_index))
     storage_index = [scan_index * max_length_scan_size, (scan_index + 1) * max_length_scan_size]
     stor_diff = storage_index[1]-storage_index[0]
     index_diff = data_index[1] - data_index[0]
@@ -34,8 +31,7 @@ def loop_func(scan_index, data_index, max_length_scan_size, galvo_data, resample
     # mod_OCT_data[:, storage_index[0]:storage_index[1]] = OCT_scanline[:, 1:1+stor_diff]
     return
 
-
-def quick_cut_data(indices, galvo_data, scan_param, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_savepath, num_cores=1, blankA_bin_filepath = None):
+def resample_and_cut_OCT_data(indices, galvo_data, scan_param, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_savepath, num_cores=1, blankA_bin_filepath = None):
     max_length_scan_size = int(np.max(np.diff(indices)))
 
     #save this value as the number of A-scans per B-scan
@@ -51,7 +47,7 @@ def quick_cut_data(indices, galvo_data, scan_param, OCT_bin_filepath, OCT_bin_sa
     resampled_galvo = np.linspace(left_trimd_crd, right_trimd_crd, max_length_scan_size)
 
     #allocate memory for modified OCT data
-    num_segs = np.floor(np.shape(indices)[0]/2)
+    num_segs = np.shape(indices)[0]
     mod_OCT_data = np.memmap(OCT_bin_savepath, dtype='>u2', mode='w+', offset=0, shape=(2048, num_segs*max_length_scan_size), order='F')
 
     # process in parallel

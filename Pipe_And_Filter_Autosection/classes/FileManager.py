@@ -3,7 +3,6 @@ from os import path
 import os
 import shutil
 from collections import defaultdict
-import copy
 import configparser
 
 class FileManager:

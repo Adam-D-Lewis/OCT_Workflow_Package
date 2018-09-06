@@ -1,16 +1,6 @@
-from typing import List, Union, Dict
-from os import path
-import os
-import shutil
-from collections import defaultdict
-import copy
-import matplotlib.pyplot as plt
-import numpy as np
-# from Pipe_And_Filter_Autosection.classes.Filter import Filter
-from filters import single_point_freq_filter, interpolate_masked_data_array, butter_lowpass_filter
+from Pipe_And_Filter_Autosection.classes.FileManager import FileManager as FM
 import configparser
 import xml.etree.ElementTree as ET
-from os import path
 import numpy as np
 
 
@@ -25,7 +15,7 @@ class OCTScanConfig:
         y_data ():
         x_filt ():
         y_filt ():
-        filter_name (str): name of filter applied if any. (unused)
+        filter_name (str): name of filter applied if any.
         attr2 (:obj:`int`, optional): Description of `attr2`.
 
     Properties:
@@ -36,6 +26,18 @@ class OCTScanConfig:
         Make a method to return all the datasets that have already been cut
     """
     key_types = {'num_b_scans_estimate': int}
+
+    def write_to_file(self, key, value, heading='SCAN_SETTINGS'):
+        """write to a config file
+        Args:
+            key:
+            value:
+            heading:
+
+        Returns:
+
+        """
+        FM.write_to_config_file(self.file_path, self.sp, key, value, heading)
 
     @property
     def left_trimd_crd(self):
@@ -64,6 +66,7 @@ class OCTScanConfig:
         self._num_scanlines = None
         self._left_trimd_crd = self.sp['left_crd'] + self.sp['start_trim']
         self._right_trimd_crd = self.sp['left_crd'] + self.sp['scan_width'] - self.sp['stop_trim']
+        self.section_alg = None
 
     def set_num_scanlines(self):
         self._num_scanlines = OCTScanConfig.return_num_scanlines(None, self._sp)
@@ -82,7 +85,10 @@ class OCTScanConfig:
                 if key in key_type:
                     config_dict[key] = key_type[key](val)
                 else:
-                    config_dict[key] = float(val)
+                    try:
+                        config_dict[key] = float(val)
+                    except ValueError:
+                        config_dict[key] = val
             return config_dict
 
     @staticmethod

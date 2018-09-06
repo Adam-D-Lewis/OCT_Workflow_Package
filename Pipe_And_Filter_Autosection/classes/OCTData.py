@@ -23,3 +23,9 @@ class OCTData:
     def file_path(self):
         """returns the file_path of the ModOCTParameters file"""
         return self._file_path
+
+    @staticmethod
+    def save_OCT_bin_file(data, filepath):
+        data = data.astype('>u2')
+        with open(filepath, 'w') as f:
+            data.transpose().tofile(f)
