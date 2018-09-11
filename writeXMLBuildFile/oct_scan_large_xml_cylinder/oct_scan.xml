@@ -1,0 +1,13 @@
+[Scan_Parameters]
+galvo_speed = 1500
+top_crd = 17.25
+left_crd = -17.25
+scan_height = 31.0
+scan_width = 34.0
+fs = 50000
+hatch_spacing = 0.03
+start_delay = 0.7
+start_trim = 1
+stop_trim = 1
+num_b_scans_estimate = 2520
+
