@@ -1,5 +1,0 @@
-D:\IntensityOCT\CS Projects\Nufern\Nufern\obj\Debug\Nufern.csprojResolveAssemblyReference.cache
-D:\IntensityOCT\CS Projects\Nufern\Nufern\obj\Debug\Nufern.dll
-D:\IntensityOCT\CS Projects\Nufern\Nufern\obj\Debug\Nufern.pdb
-D:\IntensityOCT\CS Projects\Nufern\Nufern.dll
-D:\IntensityOCT\CS Projects\Nufern\Nufern.pdb
