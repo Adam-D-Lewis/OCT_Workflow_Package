@@ -23,11 +23,11 @@ This project contains several modules.  Each is described below.
 This module takes frequency domain OCT data and a location data file (galvo data), and sections the OCT data by location according to
 the parameters specified in the OCTScanConfig file.  The data is then ready to be opened by the visualization software (add link).
 
-'''
+```
 See the autosection_all_bin_files_in_path for an example script which will search recursively in a directory for every OCT file
 (.bin) and will then section the data and save the sectioned data in a folder named "cut" in preparation to be read by the visualization
 software (LabView or ImageJ).
-'''
+```
 
 ### Installing
 
@@ -66,17 +66,6 @@ Explain what these tests test and why
 ```
 Give an example
 ```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
 ## Authors
 
 * **Adam Lewis** - *Initial work*
