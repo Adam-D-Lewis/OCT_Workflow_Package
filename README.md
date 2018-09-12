@@ -1,6 +1,6 @@
 # Galvos
 
-This package contains modules to prepare and handle OCT data
+This package contains modules useful in the workflow of collecting, processing, and visualizing Optical Coherence Tomography (OCT) imaging data in the Additive Manufacturing Design Center at The University of Texas at Austin.
 
 ## Getting Started
 
