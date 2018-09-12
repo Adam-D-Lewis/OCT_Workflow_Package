@@ -16,11 +16,9 @@ This project contains several modules.  Each is described below.
 This module takes frequency domain OCT data and a location data file (galvo data), and sections the OCT data by location according to
 the parameters specified in the OCTScanConfig file.  The data is then ready to be opened by the visualization software (add link).
 
-```
 See the autosection_all_bin_files_in_path for an example script which will search recursively in a directory for every OCT file
 (.bin) and will then section the data and save the sectioned data in a folder named "cut" in preparation to be read by the visualization
 software (LabView or ImageJ).
-```
 
 ### writeXMLBuildFile
 This module provides a python interface to create XML files usable by the EC1000 Galvo Controller by Cambridge Technologies which command the mirror position which directs a laser.  It has low level functions (single mark or jump command) as well as slightly higher level functions as well (draw a square or circle, etc.)
