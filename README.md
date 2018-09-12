@@ -4,19 +4,12 @@ This package contains modules to prepare and handle OCT data
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
 ### Prerequisites
 numpy
 scipy
 matplotlib
 
-
-```
-Give examples
-```
-
-## Module Desription
+## Module Description
 This project contains several modules.  Each is described below.
 
 ### Pipe_And_Filter_Autosection
@@ -29,43 +22,14 @@ See the autosection_all_bin_files_in_path for an example script which will searc
 software (LabView or ImageJ).
 ```
 
-### Installing
+### writeXMLBuildFile
+This module provides a python interface to create XML files usable by the EC1000 Galvo Controller by Cambridge Technologies which command the mirror position which directs a laser.  It has low level functions (single mark or jump command) as well as slightly higher level functions as well (draw a square or circle, etc.)
 
-A step by step series of examples that tell you how to get a development env running
+There is also some support for reading and plotting the commands in the xml files, though there are still some bugs at the moment.
 
-Say what the step will be
+### Curvature_Correction
+The OCT imaging data has an artificial curvature (not present in the physical system being imaged), and this module is being created to attempt to do a software correction of the data.  Currently in development.
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 ## Authors
 
 * **Adam Lewis** - *Initial work*
