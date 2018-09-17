@@ -16,7 +16,7 @@ if __name__ == "__main__":
     num_cores = 1
     sub_cores = 1
     plot = 0
-    directory = path.abspath(r'G:\OCT Data\2018_06_09_Build Surface Probe\Log_Files\Layer 1')
+    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_09_10_Nylon 12\log_files\Layer 19')
     # blankA_bin_filepath = path.abspath(r'G:\2018_06_13_Flex Bars_Variable_Power\blankA\12_48_47 PM 6-13-2018\data.bin')
     blankA_bin_filepath = None
 

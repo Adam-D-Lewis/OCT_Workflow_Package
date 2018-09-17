@@ -203,17 +203,26 @@ class GalvoData():
     @staticmethod
     def _return_m_b(x_or_y, what_to_what):
         if x_or_y == 'x':
+            #first
             # m = -0.012546660621089764
             # b = -0.06912179728030933
-            m = 0.0125475
-            b = 0.06922331
+            #second
+            # m = 0.0125475
+            # b = 0.06922331
+            # third (9/6/18)
+            m = 0.01202708578008938
+            b = 0.1766113594805716
 
         elif x_or_y == 'y':
+            # first
             # m = -0.012882209183473516
             # b = -0.06530445662203191
-            m = 0.01288427
-            b = 0.06470308
-
+            # second
+            # m = 0.01288427
+            # b = 0.06470308
+            # third (9/6/18)
+            m = 0.010475955599136673
+            b = 0.0378721858793456
         if what_to_what == 'mm_to_volt':
             return m, b
         elif what_to_what == 'volt_to_mm':

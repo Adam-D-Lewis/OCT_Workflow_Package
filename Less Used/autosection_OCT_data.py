@@ -1,4 +1,5 @@
-def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores, blankA_bin_filepath = None):
+def autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath,
+                         mod_OCT_parameters_filepath, num_cores, blankA_bin_filepath=None, alg='fast'):
     # if __name__ == "__main__":
     #import statments
     from get_indices_of_data_for_visualization import get_indices_of_data_for_visualization

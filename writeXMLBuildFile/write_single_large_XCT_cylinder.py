@@ -21,6 +21,7 @@ if not os.path.exists(symmetric_path):
 
 cyl_1_layers = [1]*5
 cyl_2_layers = [1]*5
+LP = 70
 
 for i, val in enumerate(zip(cyl_1_layers, cyl_2_layers)):
     if i % 2 == 0:
@@ -30,7 +31,7 @@ for i, val in enumerate(zip(cyl_1_layers, cyl_2_layers)):
     c1, c2 = val
     save_path = abspath(non_symmetric_path + '/layer' + '{0:03d}'.format(i) + '.xml')
     with open(abspath(save_path), 'w') as f:
-        EC.write_laser_power(f, 85)
+        EC.write_laser_power(f, LP)
         # EC.write_circ_fill(f, (16.5, 0), 30 / 2, hs, h_v)
         # EC.write_circ_fill(f, (-16.5, 0), 30 / 2, hs, h_v)
         x_ctr = 0
@@ -49,9 +50,9 @@ for i, val in enumerate(zip(cyl_1_layers, cyl_2_layers)):
     if i >= 4:
         EC.plot_xml(save_path)
 
-symmetric_layer_num = 15
+symmetric_layer_num = 20
 
-for i in range(symmetric_layer_num):
+for i in range(1,symmetric_layer_num+1):
     if i % 2 == 0:
         h_v = 'h'
     else:
@@ -59,8 +60,9 @@ for i in range(symmetric_layer_num):
     c1, c2 = val
     save_path = abspath(symmetric_path + '/layer' + '{0:03d}'.format(i) + '.xml')
     with open(abspath(save_path), 'w') as f:
-        EC.write_laser_power(f, 40)
+        EC.write_laser_power(f, LP)
         EC.write_circ_fill(f, (x_ctr, y_ctr), 30/2, hs, h_v)
         # EC.write_laser_power(f, 85)
         # EC.write_circ_fill(f, (-16.5, 0), 30/2, hs, h_v)
+        EC.write_pause(f, 3)
     EC.plot_xml(save_path)

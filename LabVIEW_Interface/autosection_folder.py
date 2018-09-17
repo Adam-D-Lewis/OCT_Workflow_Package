@@ -42,6 +42,8 @@ def autosection_folder(directory, blankA_bin_filepath=None, num_cores=4):
                     shutil.copyfile(OCT_parameters_filepath, mod_OCT_parameters_filepath)
 
                 #autosection the file
-                autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath, OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=8, blankA_bin_filepath=blankA_bin_filepath)
+                autosection_OCT_data(galvo_filepath, scan_parameters_filepath, xml_filepath, OCT_bin_filepath,
+                                     OCT_bin_savepath, mod_OCT_parameters_filepath, num_cores=8,
+                                     blankA_bin_filepath=blankA_bin_filepath)
 
                 print(OCT_bin_savepath)
