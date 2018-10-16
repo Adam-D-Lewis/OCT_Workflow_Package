@@ -48,9 +48,9 @@ def return_offset_values(j_arr_str_path, galvo_file, oct_scan_cfg, plot=1):
 
     # figure out which cutting algorithm was performed on the gd
     if oct_sc.sp['section_alg'] == 'left_to_right_only':
-        gd.section_galvo_data(oct_sc)
+        gd.detect_in_range_indices(oct_sc)
         ause = AutoSectioner('left_to_right_only')
-        ause.calc_section_indices(gd.sectioned_indices_list)
+        ause.calc_section_indices(gd.in_range_indices_list)
         nrows = np.shape(ause.sectioned_indices)[0]
         gd.sectioned_x_galvo_data_mm = np.zeros(shape=(nrows, gd.max_indices_per_scanline))
         gd.sectioned_y_galvo_data_mm = np.zeros(shape=(nrows, gd.max_indices_per_scanline))

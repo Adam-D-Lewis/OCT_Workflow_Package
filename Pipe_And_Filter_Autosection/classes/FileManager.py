@@ -4,6 +4,8 @@ import os
 import shutil
 from collections import defaultdict
 import configparser
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 
 class FileManager:
     """FileManager keeps track of all files used in the sectioning OCT algorithm
@@ -19,7 +21,6 @@ class FileManager:
         """This method constucts a list of OCT fileset dictionaries from a list of .bin files and the relative paths to the other files and the absolute path to the blank_A_dataset
 
         Args:
-            file_list:
             file_list: contains raw_OCT_paths
             raw_galvo_relpath:
             OCT_scan_config_relpath:
@@ -90,6 +91,29 @@ class FileManager:
                         path_list.append(full_path)
         return path_list
 
+    def find_all_with_extension(self, directory: str, extension: str, exclude_folder_list: Union[List[str], str] = []) -> List[str]:
+        """This method recursively searches a directory for every instance with one of a set of filenames.  It then returns a list of paths to each of these files.
+
+        Args:
+            directory: directory to be search for each instance of a specific filename
+            extension:  extensions to be searched for
+            exclude_folder_list: a list of folder names to be excluded from the search
+
+        Returns:
+            path_list: list of paths to each file with filename
+        """
+        path_list = []
+        if isinstance(exclude_folder_list, str):
+            exclude_folder_list = [exclude_folder_list]
+
+        for root, dirs, files in os.walk(directory, topdown=True):
+            dirs[:] = [d for d in dirs if d not in exclude_folder_list]
+            for file in files:
+                if file.lower().endswith('.' + extension.lower()):
+                    full_path = path.join(root, file)
+                    path_list.append(full_path)
+        return path_list
+
     def copy_files_to_rel_loc_of_filename(self, path_of_files_to_copy: Union[str, List[str]], relative_location_to_put_files: str = './', search_directory: str = '', search_for_filenames: Union[List[str], str] = ''):
         """This recursively searches a directory for each file with a specified filename, then copies a specified file(s) to a relative location of each instance of the filename.
 
@@ -133,13 +157,36 @@ class FileManager:
 
     @staticmethod
     def write_to_config_file(file_path, sp, key, value, heading='SCAN_SETTINGS'):
+        """Writes the value to the sp dictionary, and then to file
+
+        Args:
+            file_path:
+            sp:
+            key:
+            value:
+            heading:
+
+        Returns:
+
+        """
         config_parser = configparser.ConfigParser()
         config_parser.optionxform = str
         config_parser.read(file_path)
         sp[key] = value
+        if heading not in config_parser.sections():
+            config_parser[heading] = {}
+        if type(value) == str:
+            # value = value.replace('%%', '%')
+            value = value.replace('%', '%%')  # must escape any percent signs with two percent signs
         config_parser[heading][key] = str(value)
         with open(file_path, 'w') as configfile:
             config_parser.write(configfile)
 
     def __init__(self) -> None:
         pass
+
+    # @staticmethod
+    # def ask_open_file(extension=None):
+    #     Tk().withdraw()
+    #     filename = askopenfilename(extension=extension)
+    #     return filename

@@ -65,6 +65,12 @@ def write_oct_rect_fill(file, pt1, pt2, hatch_spacing, scanDir='h'):
                 write_jmp(f, [iterCrd, yCrd[0]])
                 write_jmp(f, [iterCrd, yCrd[1]])
 
+def write_jmp_spd(file, jmp_spd):
+    file.write(f"<Set id='JumpSpeed'>{jmp_spd:.0f}</Set>")
+
+def write_mrk_spd(file, mrk_spd):
+    file.write(f"<Set id='MarkSpeed'>{mrk_spd:.0f}</Set>")
+
 
 def write_oct_ec1000_file(filepath, x0, y0, w, h, start_delay=0.4, hs=0.2794, galvo_speed=1500):
     #  xo, yo are the top, left coordinates
@@ -77,7 +83,7 @@ def write_oct_ec1000_file(filepath, x0, y0, w, h, start_delay=0.4, hs=0.2794, ga
     fillFile = open(abspath(filepath), 'w')
 
     #set galvo speed and write initial delay
-    # writeSpeed(fillFile, galvo_speed) #need to create this, and make sure it works
+    write_jmp(fillFile, galvo_speed) #need to make sure this works
 
     #write the delay command
     write_pause(fillFile, start_delay)
@@ -518,3 +524,10 @@ def square_line_intersection(bottom, left, right, top, m, b):
 
 def plot_xml(xml_filepath):
     oct_ec.plot_xml(xml_filepath)
+
+def write_volt_to_mm_xml_file(file):
+    write_jmp_spd(file, 3000)
+    write_jmp(file, (-100, -100))
+    write_pause(file, 2)
+    write_jmp(file, (100, 100))
+    write_pause(file, 2)

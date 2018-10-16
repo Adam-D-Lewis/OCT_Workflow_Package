@@ -14,38 +14,43 @@ if __name__ == "__main__":
 
     # inputs
     num_cores = 1
-    sub_cores = 1
+    sub_cores = 2
     plot = 0
-    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_09_10_Nylon 12\log_files\Layer 19')
-    # blankA_bin_filepath = path.abspath(r'G:\2018_06_13_Flex Bars_Variable_Power\blankA\12_48_47 PM 6-13-2018\data.bin')
-    blankA_bin_filepath = None
+    directory = path.abspath(r'G:\OCT Data\2018_06_11_3PointBars_Constant_Power\Log Files\Build1\Layer 0\3_45_08 PM 6-11-2018')
+    blankA_bin_filepath = path.abspath(r'G:\OCT Data\2018_06_11_3PointBars_Constant_Power\blankA\4_32_12 PM 6-11-2018\data.bin')
+    # blankA_bin_filepath = None
 
     fm = FM()
     file_list = fm.find_all_with_filename(directory, 'data.bin', exclude_folder_list=[])
     fileset_list = fm.construct_fileset(file_list, '../', '../', './', './cut/cut_data.bin', '../', './cut/parameters.oct_scan', blankA_bin_filepath)
 
     def process_data(file_dict):
-        # try:
-        raw_OCT = OCTData(file_dict['raw_OCT_path'])
-        galvo_data = GD(file_dict['raw_galvo_path'])
-        OCT_scan_config = OCT_SC(file_dict['OCT_scan_config_path'])
-        OCT_parameters = OCTParameters(file_dict['raw_OCT_parameters_path'])
-        mod_OCT = ModOCT(file_dict['mod_OCT_path'])
-        OCT_ec1000 = OCTEC1000(file_dict['OCT_EC1000_path'])
-        mod_OCT_parameters = ModOCTParameters(file_dict['mod_OCT_parameters_path'])
-        blankA = OCTData(file_dict['blank_A_path'])
-        auto_sectioner = AutoSectioner()
+        try:
+            raw_OCT = OCTData(file_dict['raw_OCT_path'])
+            OCT_scan_config = OCT_SC(file_dict['OCT_scan_config_path'])
+            galvo_data = GD(file_dict['raw_galvo_path'], OCT_sc=OCT_scan_config)
+            OCT_parameters = OCTParameters(file_dict['raw_OCT_parameters_path'])
+            mod_OCT = ModOCT(file_dict['mod_OCT_path'])
+            OCT_ec1000 = OCTEC1000(file_dict['OCT_EC1000_path'])
+            mod_OCT_parameters = ModOCTParameters(file_dict['mod_OCT_parameters_path'])
+            blankA = OCTData(file_dict['blank_A_path'])
+            auto_sectioner = AutoSectioner()
 
-        OCT_ec1000.record_num_scanlines(mod_OCT_parameters)
-        galvo_data.filter_galvo_data(OCT_scan_config.sp['galvo_speed'])
-        galvo_data.section_galvo_data(OCT_scan_config)
+            OCT_ec1000.record_num_scanlines(mod_OCT_parameters)
+            galvo_data.filter_galvo_data(OCT_scan_config.sp['galvo_speed'])
+            galvo_data.detect_in_range_indices(OCT_scan_config)
 
-        if plot:
-            galvo_data.plot()
-        auto_sectioner.autosection_data(alg_name='left_to_right_only', num_cores=sub_cores, raw_OCT=raw_OCT, galvo_data=galvo_data, OCT_sc=OCT_scan_config, OCT_param=OCT_parameters,
-                                        mod_OCT=mod_OCT, OCT_ec1000=OCT_ec1000, mod_OCT_param=mod_OCT_parameters, blankA=blankA)
-        # except:
-        #     print('Failed to process {}'.format(file_dict['raw_OCT_path']))
+            if blankA_bin_filepath is not None:
+                blankA = OCTData(blankA_bin_filepath)
+
+            if plot:
+                galvo_data.plot()
+            auto_sectioner.autosection_data(alg_name='max_alignment', num_cores=sub_cores, raw_OCT=raw_OCT, galvo_data=galvo_data, OCT_sc=OCT_scan_config, OCT_param=OCT_parameters,
+                                            mod_OCT=mod_OCT, OCT_ec1000=OCT_ec1000, mod_OCT_param=mod_OCT_parameters, blankA=blankA)
+        # print('hi')
+        except Exception as e:
+            print('Failed to process {}'.format(file_dict['raw_OCT_path']))
+            print(e)
     t0 = time.time()
     Parallel(n_jobs=num_cores)(
         delayed(process_data)(file_dict) for file_dict in fileset_list)

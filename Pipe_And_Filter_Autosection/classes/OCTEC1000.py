@@ -49,6 +49,24 @@ class OCTEC1000:
         #initialize vars
         self._file_path = file_path
         self._num_scanlines = OCTScanConfig.return_num_scanlines(xml_file=self.file_path)
+        self.jmp_spd = None
+
+
+    def get_jump_speed(self):
+        """This function reads the file specified by the self._file_path path.  It then returns the jump speed found in reading the file.  Throws an error if two jump speeds exist.
+        Returns:
+            int: The jumpspeed read in the xml file.
+        """
+        xml_commands_list = OCTScanConfig.return_list_of_xml_commands(self._file_path)
+        found_one = False
+        for child in xml_commands_list:
+            if child.tag.replace('"',"'").lower() == "<Set id='JumpSpeed'>".lower():
+                if found_one == False:
+                    self.jmp_spd = int(child.attrib)
+                    found_one = True
+                else:
+                    raise Exception("jump speed is set two times in this xml file.")
+
 
     def record_num_scanlines(self, mod_OCT_parameters: ModOCTParameters):
         mod_OCT_parameters.write_to_file('Expected B-Scans', self.num_scanlines)

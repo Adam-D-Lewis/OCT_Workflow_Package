@@ -1,0 +1,5 @@
+<Set id='JumpSpeed'>3000</Set>
+<JumpAbs>-100.000000, -100.000000</JumpAbs>
+<LongDelay>2000000</LongDelay>
+<JumpAbs>100.000000, 100.000000</JumpAbs>
+<LongDelay>2000000</LongDelay>

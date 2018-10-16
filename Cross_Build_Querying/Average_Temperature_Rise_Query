@@ -1,0 +1,67 @@
+"""
+The script is an example of how to query data across various builds.
+Specifically, this script determines the temperature rise achieved on the build surface for a few identical nylon cylinder builds
+
+The general strategy is find the IR images for each folder that are not a single frame, take the average of an area, then take the average of the area over each frame.
+Subtract the first frame average from the maximum average.  This is the temperature rise.  Plot these values at the end vs the date of the build.
+"""
+
+if __name__ == "__main__":
+    import os.path
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import time
+    from joblib import Parallel, delayed
+    from Pipe_And_Filter_Autosection.classes.FileManager import FileManager as FM
+
+    master_dir_path = os.path.abspath(r'C:\Users\adl628\Desktop\Query Example Data\test')
+    num_cores = 4
+
+    fm = FM()
+    t0 = time.time()
+    cross_build_rises = []
+    build_rises = []
+    single_build_rises = np.empty(4)
+    subdir_list = os.listdir(master_dir_path)
+    for j, f in enumerate(subdir_list):
+        print(f"file #{j}/{len(subdir_list)-1} being processed - ({f}).")
+        f_fullpath = os.path.join(master_dir_path, f)
+        if os.path.isdir(f_fullpath):
+            list_32f_files = fm.find_all_with_extension(f_fullpath, '32f')
+            large_32f_list = []
+            for filepath in list_32f_files:
+                if os.path.getsize(filepath) >= 32*640*512*2:
+                    large_32f_list.append(filepath)
+
+            # Manipulate the large files now
+            single_build_ave_rise = 0
+
+            def parallel_func(i, j, N, image_stack_path, single_build_rises):
+                print(f"---file #{i}/{N-1} being processed.")
+                image_stack = np.fromfile(image_stack_path, '>f4').reshape((640, 512, -1), order='F')
+                roi_data = image_stack[282:321, 260:300, :]
+                max_rise = np.mean(np.max(roi_data, axis=2) - roi_data[:, :, 0])
+                # single_build_rises[i+j*N] = max_rise
+                return [i, max_rise]
+            with Parallel(n_jobs=num_cores) as parallel:
+                build_rises.append(parallel(delayed(parallel_func)(i, j, len(large_32f_list), image_stack_path, single_build_rises) for i, image_stack_path in enumerate(large_32f_list)))
+            build_rises[j].sort()
+            build_rises[j] = [x[1] for x in build_rises[j]]
+    t1 = time.time()
+    dt = t1-t0
+    print(f"It took {round(dt)} seconds to run that query.")
+
+    #plot results
+    plt.figure()
+    plt.plot(build_rises[0], label='181C, 65%, build0')
+    plt.plot(build_rises[1], label='181C, 75%, build1')
+    plt.plot(build_rises[2], label='181C, 75%, build2')
+    plt.title('Ave Temp Rise vs. Build')
+    plt.xlabel('Layer Number')
+    plt.ylabel('Temp Rise (degC)')
+    plt.legend()
+
+    plt.show()
+    print('bye')
+
+

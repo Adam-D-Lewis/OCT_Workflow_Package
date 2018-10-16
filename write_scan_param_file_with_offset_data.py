@@ -1,7 +1,8 @@
 import configparser
 import numpy as np
+from Pipe_And_Filter_Autosection.classes.GalvoData import GalvoData
 
-def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer = 2.25, y_spacer = 1.75, start_trim = 1, stop_trim = 1, offset_crd = (-0.25, 1.75), new_hatch=0.03):
+def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer = 2.25, y_spacer = 1.75, start_trim = 1, stop_trim = 1, offset_crd = (-0.25, 1.75), new_hatch=0.03, x_fit = [0.01202708578008938, 0.1766113594805716], y_fit = [0.010475955599136673, 0.0378721858793456]):
     # offset is the adjustment I should make to each crd, its -1 * the location of the OCT center when the galvos are at 0,0
 
     #account for offset
@@ -30,6 +31,9 @@ def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer = 2.25
     old_hatch = 0.03
     b_scan_estimate = int(round((2060-old_delay*old_OCT_fs/512)*new_area/old_area*(old_hatch/new_hatch)*1.05+new_delay*new_OCT_fs/512, -1))
 
+    x_m, x_b = x_fit
+    y_m, y_b = y_fit
+
     #write config file
     config = configparser.ConfigParser()
     config['Scan_Parameters'] = {'galvo_speed': '1500',
@@ -43,6 +47,11 @@ def write_scan_param_file_with_offset_data(filename, crd1, crd2, x_spacer = 2.25
                                     'start_trim': str(start_trim),
                                     'stop_trim': str(stop_trim),
                                     'num_b_scans_estimate': str(b_scan_estimate)}
+
+    config['Sectioning_Parameters'] = {'x_mm_to_volt_slope': x_m,
+                                        'x_mm_to_volt_intercept': x_b,
+                                        'x_mm_to_volt_slope': y_m,
+                                        'x_mm_to_volt_intercept': y_b}
 
     with open(filename, 'w') as f:
         config.write(f)
