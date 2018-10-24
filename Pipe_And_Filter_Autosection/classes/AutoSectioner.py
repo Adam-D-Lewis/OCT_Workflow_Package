@@ -200,11 +200,17 @@ class AutoSectioner:
                 read_offset = mod_OCT_param.sp['Bits'] // 8 * mod_OCT_param.sp['Points Per A-Scan'] * (data_indices[-1])
             AutoSectioner.write_mod_OCT_data(mod_OCT, storage_index, OCT_data, read_offset, read_shape, sectioned_indices_adjusted_to_read_data, blankA)
 
-        if multiprocessing.cpu_count() < num_cores:
-            num_cores = multiprocessing.cpu_count()
-        Parallel(n_jobs=num_cores)(
-            delayed(loop_func)(b_scan_index, data_indices, galvo_data, mod_OCT, raw_OCT, blankA, progress_update=True) for b_scan_index, data_indices in
-            enumerate(galvo_data.sectioned_indices_full_list))  # (galvo_data.in_range_indices_list))
+        if num_cores != 1:
+            if multiprocessing.cpu_count() < num_cores:
+                num_cores = multiprocessing.cpu_count()
+            Parallel(n_jobs=num_cores)(
+                delayed(loop_func)(b_scan_index, data_indices, galvo_data, mod_OCT, raw_OCT, blankA, progress_update=True) for b_scan_index, data_indices in
+                enumerate(galvo_data.sectioned_indices_full_list))
+        else:
+            for b_scan_index, data_indices in enumerate(galvo_data.sectioned_indices_full_list):
+                loop_func(b_scan_index, data_indices, galvo_data, mod_OCT, raw_OCT, blankA, progress_update=True)
+
+        # (galvo_data.in_range_indices_list))
         # for b_scan_index, data_index in enumerate(galvo_data.sectioned_indices_list):
         #     loop_func(b_scan_index, data_index, galvo_data, mod_OCT, raw_OCT, blankA, progress_update=True)
 
@@ -220,13 +226,8 @@ class AutoSectioner:
     # @jit
     def return_OCT_data(OCT_data, offset, shape, blankA):
         OCT_scanline = np.memmap(OCT_data.file_path, dtype='>u2', mode='r', offset=int(offset), shape=shape, order='F')
-        if blankA.file_path is not None:
-            blankA_data = np.fromfile(blankA.file_path, dtype='>u2')
-            if blankA_data.size > 2048:
-                blankA_data = np.reshape(blankA_data, (2048, -1), 'F')
-                blankA_data = np.mean(blankA_data, 1).astype('>u2')
-                OCTData.save_OCT_bin_file(blankA_data, blankA.file_path)
-            OCT_scanline = AutoSectioner._subtract_blankA(OCT_scanline, blankA_data)
+        if blankA is not None:
+            OCT_scanline = AutoSectioner._subtract_blankA(OCT_scanline, blankA.data)
         return OCT_scanline
 
     @staticmethod

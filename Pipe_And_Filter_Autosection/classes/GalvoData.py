@@ -50,6 +50,8 @@ class GalvoData():
         self._b_x = None
         self._m_y = None
         self._b_y = None
+        self.blankA_indices = None
+        self.file_path = file_path
         if file_path is None:
             pass
         else:
@@ -417,6 +419,22 @@ class GalvoData():
         self.filter_galvo_data(oct_ec.get_jump_speed(), fs=50000)
         diff = np.diff(self.x_filt)
 
+    def return_indices_where_position_between_two_crds(self, crd1, crd2):
+        x_lims = self.mm_to_volt(np.asarray([crd1[0], crd2[0]]), 'x')
+        y_lims = self.mm_to_volt(np.asarray([crd1[1], crd2[1]]), 'y')
+        x_ma = np.ma.masked_inside(self.x_filt, x_lims[0], x_lims[1])
+        y_ma = np.ma.masked_inside(self.y_filt, y_lims[0], y_lims[1])
+        and_mask = x_ma.mask * y_ma.mask
+        return np.nonzero(and_mask)[0]
+
+    def set_blankA_indices(self, crd1=(-145, 145), crd2=(-155, 155)):
+        blankA_indices = self.return_indices_where_position_between_two_crds(crd1, crd2)
+        if np.size(blankA_indices) != 0:
+            self.blankA_indices = blankA_indices
+        else:
+            self.blankA_indices = None
+
+        return self.blankA_indices
 
         #calculate the coefficients
 

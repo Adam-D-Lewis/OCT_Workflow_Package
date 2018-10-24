@@ -1,6 +1,7 @@
 if __name__ == "__main__":
     from os import path
     import time
+    import numpy as np
     from joblib import Parallel, delayed
     from Pipe_And_Filter_Autosection.classes.FileManager import FileManager as FM
     from Pipe_And_Filter_Autosection.classes.OCTData import OCTData
@@ -13,19 +14,19 @@ if __name__ == "__main__":
     from Pipe_And_Filter_Autosection.classes.AutoSectioner import AutoSectioner
 
     # inputs
-    num_cores = 1
-    sub_cores = 2
+    num_cores = 2
+    sub_cores = 4
     plot = 0
-    directory = path.abspath(r'G:\OCT Data\2018_06_11_3PointBars_Constant_Power\Log Files\Build1\Layer 0\3_45_08 PM 6-11-2018')
-    blankA_bin_filepath = path.abspath(r'G:\OCT Data\2018_06_11_3PointBars_Constant_Power\blankA\4_32_12 PM 6-11-2018\data.bin')
-    # blankA_bin_filepath = None
+    directory = path.abspath(r'C:\Users\adl628\Desktop\2018_10_16_Surface_Fit\logs')
+    # blankA_bin_filepath = path.abspath(r'G:\OCT Data\2018_06_11_3PointBars_Constant_Power\blankA\4_32_12 PM 6-11-2018\data.bin')
+    blankA_bin_filepath = None
 
     fm = FM()
     file_list = fm.find_all_with_filename(directory, 'data.bin', exclude_folder_list=[])
     fileset_list = fm.construct_fileset(file_list, '../', '../', './', './cut/cut_data.bin', '../', './cut/parameters.oct_scan', blankA_bin_filepath)
 
     def process_data(file_dict):
-        try:
+        # try:
             raw_OCT = OCTData(file_dict['raw_OCT_path'])
             OCT_scan_config = OCT_SC(file_dict['OCT_scan_config_path'])
             galvo_data = GD(file_dict['raw_galvo_path'], OCT_sc=OCT_scan_config)
@@ -40,21 +41,36 @@ if __name__ == "__main__":
             galvo_data.filter_galvo_data(OCT_scan_config.sp['galvo_speed'])
             galvo_data.detect_in_range_indices(OCT_scan_config)
 
-            if blankA_bin_filepath is not None:
-                blankA = OCTData(blankA_bin_filepath)
+            #load blankA for background subtraction
+            galvo_data.set_blankA_indices((-145, 145), (-155, 155))
+            if galvo_data.blankA_indices is None:
+                if blankA_bin_filepath is not None:
+                    blankA = OCTData(blankA_bin_filepath)
+                    if np.size(blankA.data) > mod_OCT_parameters.sp['Points Per A-Scan']:
+                        blankA.average_data()
+                        blankA.save_OCT_bin_file(blankA.data, blankA.file_path)
+                else:
+                    blankA = None
+            else:
+                blankA = OCTData(file_dict['raw_OCT_path'])
+                blankA.open_data(mod_OCT_parameters, indices_to_open=galvo_data.blankA_indices)
+                blankA.average_data()
+
 
             if plot:
                 galvo_data.plot()
             auto_sectioner.autosection_data(alg_name='max_alignment', num_cores=sub_cores, raw_OCT=raw_OCT, galvo_data=galvo_data, OCT_sc=OCT_scan_config, OCT_param=OCT_parameters,
                                             mod_OCT=mod_OCT, OCT_ec1000=OCT_ec1000, mod_OCT_param=mod_OCT_parameters, blankA=blankA)
         # print('hi')
-        except Exception as e:
-            print('Failed to process {}'.format(file_dict['raw_OCT_path']))
-            print(e)
+        # except Exception as e:
+        #     print('Failed to process {}'.format(file_dict['raw_OCT_path']))
+        #     print(e)
     t0 = time.time()
-    Parallel(n_jobs=num_cores)(
-        delayed(process_data)(file_dict) for file_dict in fileset_list)
-    # for file_dict in fileset_list:
-    #     process_data(file_dict)
+    if num_cores != 1:
+        Parallel(n_jobs=num_cores)(
+            delayed(process_data)(file_dict) for file_dict in fileset_list)
+    else:
+        for file_dict in fileset_list:
+            process_data(file_dict)
     dt = time.time()-t0
     print(dt)

@@ -13,8 +13,6 @@ class ModOCTParameters:
     Properties:
 
 
-    Todo:
-        Make a method to return all the datasets that have already been cut
     """
 
     key_types = {}

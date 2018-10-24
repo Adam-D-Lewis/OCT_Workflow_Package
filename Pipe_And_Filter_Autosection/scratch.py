@@ -3,6 +3,8 @@ from Pipe_And_Filter_Autosection.classes.GalvoData import GalvoData as GD
 import numpy as np
 from Pipe_And_Filter_Autosection.classes.OCTScanConfig import OCTScanConfig as OCT_SC
 import copy
+from Pipe_And_Filter_Autosection.HeightData import HeightData as HD
+from Pipe_And_Filter_Autosection.calc_interp_rel_height_offset import calc_interp_rel_height_offset
 #
 # gd = GD()
 # gd.pattern = [2, 3, 3.5, 4]
@@ -23,13 +25,26 @@ import copy
 # ret("C:\\Users\\adl628\\Desktop\\Height Correction\\galvo_post.2d_dbl", "C:\\Users\\adl628\\Desktop\\Height Correction\\scan_param.oct_config")
 
 # oct_sc = OCT_SC(r'C:\Users\adl628\Desktop\Height Correction\Layer 0\scan_param.oct_config')
-value = 'Z:/Adam Lewis/2018_09_07_Nylon12/Logs/45%/179/MessUpNonsymmetric/Layer 0/scan_param.oct_config'
-newvalue = copy(value)
-for pos, char in enumerate(newvalue):
-    if char == '%':
-        if value[pos + 1] != '%' and value[pos-1] != '%':
-            value = value[:pos] + '%' + value[pos:]
 
+# hd = HD()
+oct_sc = OCT_SC(r'Z:\Adam Lewis\OCT Data\2018_10_16 Surface_Fit\logs\fullscan4\scan_param.oct_config')
+gd = GD(r'Z:\Adam Lewis\OCT Data\2018_10_16 Surface_Fit\logs\fullscan4\galvo.2d_dbl', OCT_sc=oct_sc)
+gd.filter_galvo_data(oct_sc._sp['galvo_speed'])
+gd.detect_in_range_indices(oct_sc)
+alg_name = oct_sc._secp['section_alg']
+asec = AS(alg_name=alg_name)
+asec.build_sectioning_index_array(gd, asec._alg_name)
+
+gd.sectioned_x_galvo_data_mm = np.empty(shape=(gd.sectioned_indices_full_list.shape))
+gd.sectioned_y_galvo_data_mm = np.empty(shape=(gd.sectioned_indices_full_list.shape))
+for i, scanline_indices in enumerate(gd.sectioned_indices_full_list):
+    gd.sectioned_x_galvo_data_mm[i, :] = gd.volt_to_mm(gd.x_filt[scanline_indices], 'x')
+    gd.sectioned_y_galvo_data_mm[i, :] = gd.volt_to_mm(gd.y_filt[scanline_indices], 'y')
+
+hd = calc_interp_rel_height_offset(gd.file_path, oct_sc.file_path)
+hd.height_mm = hd.rel_height_offset_pix*hd.mmPerPixel
+print(hd.fit_coeff)
+hd.polyfit_height_data(gd.sectioned_x_galvo_data_mm, gd.sectioned_y_galvo_data_mm, 2)
+print(hd.fit_coeff)
 
 print('bye')
-

@@ -33,20 +33,11 @@ def generate_sample_data():
 # height_data = np.genfromtxt('height.csv', delimiter=',')
 
 def return_offset_values(j_arr_str_path, galvo_file, oct_scan_cfg, save=False, plot=1):
-
     hd = HeightData(j_arr_str_path, mmPerPixel=mmPerPixel)
-
-    # with open(os.path.abspath(r'C:\Users\adl628\Box Sync\JavaProjects\OCT_Plugin_REALLY_REAL\src\main\test_data\height_gd_octsc_b2_att1.pickle'), 'wb') as f:
-    #     pickle.dump([hd.height_mm, galvo_file, oct_scan_cfg], f)
-
-    # raise('error, lolz')
-    # with open(os.path.abspath(r'C:\Users\adl628\Box Sync\JavaProjects\OCT_Plugin_REALLY_REAL\src\main\test_data\height_gd_octsc.pickle'), 'rb') as f:
-    #     hd.height_mm, galvo_file, oct_scan_cfg = pickle.load(f)
-
     hd.filter_height_data(kernal_size=21)
     oct_sc = OCTScanConfig(oct_scan_cfg)
     gd = GalvoData(galvo_file, OCT_sc=oct_sc)
-    gd.filter_galvo_data(1500)
+    gd.filter_galvo_data(oct_sc._sp['galvo_speed'])
 
     # if oct_sc.sp['section_alg'] == 'left_to_right_only' or (isinstance(oct_sc.secp, collections.Mapping) and oct_sc.secp['section_alg'] == 'left_to_right_only'):
 
@@ -62,10 +53,10 @@ def return_offset_values(j_arr_str_path, galvo_file, oct_scan_cfg, save=False, p
         gd.sectioned_x_galvo_data_mm[i, :] = gd.volt_to_mm(gd.x_filt[scanline_indices], 'x')
         gd.sectioned_y_galvo_data_mm[i, :] = gd.volt_to_mm(gd.y_filt[scanline_indices], 'y')
 
-    hd.polyfit_height_data(gd.sectioned_x_galvo_data_mm, gd.sectioned_y_galvo_data_mm, poly_order=4)
+    hd.polyfit_height_data(gd.sectioned_x_galvo_data_mm, gd.sectioned_y_galvo_data_mm, poly_order=2)
     coeff_str = ','.join([str(num) for num in hd.fit_coeff])
     oct_sc.write_to_file('height_fit_coefficients', coeff_str, 'Sectioning_Parameters')
-    # hd.plot_height(gd.sectioned_x_galvo_data_mm, gd.sectioned_y_galvo_data_mm, plot_fit=1, plot_error=1)
+    hd.plot_height(gd.sectioned_x_galvo_data_mm, gd.sectioned_y_galvo_data_mm, plot_fit=1, plot_error=1)
 
     # # calculate the offset for every XY location
     # hd.calc_rel_offset(use_height_data=False)

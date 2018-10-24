@@ -1,5 +1,6 @@
 import numpy as np
 from j_to_py import j_array_to_np_array as j2np
+from mpl_toolkits.mplot3d import Axes3D #don't delete, this is actually used by projection=3d below
 import scipy as sp
 import scipy.optimize as opt
 import matplotlib.pyplot as plt
@@ -29,6 +30,7 @@ class HeightData:
         self.fit_coeff = None
         self.rel_height_offset_mm = None
         self.rel_height_offset_pix = None
+        self.sse = None
 
     def polyfit_height_data(self, sectioned_x_galvo, sectioned_y_galvo, poly_order=2):
         # #  example numbers
@@ -38,8 +40,9 @@ class HeightData:
 
         self.build_A_matrix(sectioned_x_galvo, sectioned_y_galvo, poly_order)
 
-        c, _, _, _ = sp.linalg.lstsq(self.A, self.height_mm.flatten())
+        c, r, _, _ = sp.linalg.lstsq(self.A, self.height_mm.flatten())
         self.fit_coeff = c
+        self.sse = np.mean(r)
         # self.height_fit_mm = np.dot(A, c).reshape(np.shape(self.height_mm))
         # return self.height_fit_mm
 
@@ -138,7 +141,7 @@ class HeightData:
 
         if plot_fit:
             self.plot_height_fit(x_galvo, y_galvo, plot_error, show=False)
-
+            plt.title(f"sse is {self.sse}")
         plt.show()
 
     def plot_height_fit(self, x_galvo, y_galvo, plot_error=True, show=True):
