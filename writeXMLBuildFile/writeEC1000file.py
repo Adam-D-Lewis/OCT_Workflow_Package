@@ -66,13 +66,13 @@ def write_oct_rect_fill(file, pt1, pt2, hatch_spacing, scanDir='h'):
                 write_jmp(f, [iterCrd, yCrd[1]])
 
 def write_jmp_spd(file, jmp_spd):
-    file.write(f"<Set id='JumpSpeed'>{jmp_spd:.0f}</Set>")
+    file.write(f"<Set id='JumpSpeed'>{jmp_spd:.0f}</Set>\n")
 
 def write_mrk_spd(file, mrk_spd):
-    file.write(f"<Set id='MarkSpeed'>{mrk_spd:.0f}</Set>")
+    file.write(f"<Set id='MarkSpeed'>{mrk_spd:.0f}</Set>\n")
 
 
-def write_oct_ec1000_file(filepath, x0, y0, w, h, start_delay=0.4, hs=0.2794, galvo_speed=1500):
+def write_oct_ec1000_file(filepath, x0, y0, w, h, start_delay=0.4, hs=0.2794, galvo_speed=1500, add_blank_a_scans=True):
     #  xo, yo are the top, left coordinates
     #  w, h are width and height(mm)
     #  hs = hatch spacing (mm)
@@ -83,12 +83,21 @@ def write_oct_ec1000_file(filepath, x0, y0, w, h, start_delay=0.4, hs=0.2794, ga
     fillFile = open(abspath(filepath), 'w')
 
     #set galvo speed and write initial delay
-    write_jmp(fillFile, galvo_speed) #need to make sure this works
+    # write_comment(fillFile, 'Set Galvo Jump Speed (mm/s)')
+    write_jmp_spd(fillFile, galvo_speed) #need to make sure this works
 
     #write the delay command
+    # write_comment(fillFile, "Delay so we do not miss important A-scans")
     write_pause(fillFile, start_delay)
 
+    #go get a blank b-scan if flag set
+    # write_comment(fillFile, 'Collect Some Blank A Scans for Background Subtraction')
+    if add_blank_a_scans:
+        write_jmp(fillFile, (-150, 150))
+        write_pause(fillFile, 0.02) #should be able to collect about 1000 blank A-scans at fs=50kHz
+
     #write rectangle
+    # write_comment(fillFile, 'Start regular oct-scanning below')
     write_oct_rect_fill(fillFile, [x0, y0], [x0+w, y0-h], hs, 'h')
 
     #close file

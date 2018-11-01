@@ -1,13 +1,13 @@
 #!/usr/bin/env python
+import os
 
-import socket
+dir_path = r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_10_31 Curl Part\layer_files'
 
-HOST = "localhost"
-PORT = 65500
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((HOST, PORT))
-
-sock.send(bytearray("Hello\n", encoding='ascii'))
-sock.close()
-print("Socket closed")
+for file in os.listdir(dir_path):
+    if file.endswith('.xml'):
+            fpath = os.path.join(dir_path, file)
+            with open(fpath, 'r') as f:
+                text = f.read()
+            with open(fpath, 'w') as f:
+                text2 = text.replace(r"<Set id='LaserPower'>255</Set>", r"<Set id='LaserPulse'>1,160,400</Set>")
+                f.write(text2)

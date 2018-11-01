@@ -230,6 +230,7 @@ class AutoSectioner:
             OCT_scanline = AutoSectioner._subtract_blankA(OCT_scanline, blankA.data)
         return OCT_scanline
 
+
     @staticmethod
     def _both_dir(num_cores=4, raw_OCT: OCTData = None, galvo_data: GalvoData = None, OCT_sc: OCT_SC = None, OCT_param: OCT_P = None, mod_OCT: ModOCT = None,
                   OCT_ec1000: OCTEC1000 = None, mod_OCT_param: ModOCTParameters = None, blankA: OCTData = None):
@@ -302,12 +303,14 @@ class AutoSectioner:
             #                                                                                              data_indices[0] - 1)),
             #                                                                                      shape=(mod_OCT_param.sp['Points Per A-Scan'], galvo_data.max_indices_per_scanline),
             #                                                                                      order='F'))
-
-        if multiprocessing.cpu_count() < num_cores:
-            num_cores = multiprocessing.cpu_count()
-        Parallel(n_jobs=num_cores)(
-            delayed(loop_func)(scan_index, data_index, galvo_data, mod_OCT, raw_OCT, blankA, progress_update=True) for scan_index, data_index in enumerate(galvo_data.sectioned_indices_full_list))
-
+        if num_cores != 1:
+            if multiprocessing.cpu_count() < num_cores:
+                num_cores = multiprocessing.cpu_count()
+            Parallel(n_jobs=num_cores)(
+                delayed(loop_func)(scan_index, data_index, galvo_data, mod_OCT, raw_OCT, blankA, progress_update=True) for scan_index, data_index in enumerate(galvo_data.sectioned_indices_full_list))
+        else:
+            for scan_index, data_index in enumerate(galvo_data.sectioned_indices_full_list):
+                loop_func(scan_index, data_index, galvo_data, mod_OCT, raw_OCT, blankA, progress_update=True)
     def calc_section_indices(self, galvo_data_indices):
         self.sectioned_indices = AutoSectioner.static_calc_section_indices(galvo_data_indices, self.alg_name)
 

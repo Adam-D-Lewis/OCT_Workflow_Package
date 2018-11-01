@@ -17,7 +17,9 @@ def read_scan_params_create_xml(scan_params_filepath, ec1000_xml_savepath):
     #create file
     EC.write_oct_ec1000_file(ec1000_xml_savepath, float(p['left_crd']), float(p['top_crd']), float(p['scan_width']), float(p['scan_height']), float(p['start_delay']), float(p['hatch_spacing']), float(p['galvo_speed']))
 
-
+scan_params_filepath = r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_10_31 Curl Part\oct_scan\Reg\scan_param.oct_config'
+ec1000_xml_savepath = r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_10_31 Curl Part\oct_scan\Reg\oct_scan.xml'
+read_scan_params_create_xml(scan_params_filepath, ec1000_xml_savepath)
 
 
 

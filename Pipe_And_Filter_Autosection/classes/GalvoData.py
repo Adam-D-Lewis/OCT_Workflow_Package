@@ -340,7 +340,7 @@ class GalvoData():
         filtered_index_list = []
         first_found = False
         for ind1, ind2 in index_list:
-            if not first_found:
+            if not first_found:  # first b-scan of interest will be left to right
                 if self.mm_to_volt(mm_range_values_to_keep[0] - tol_mm, x_or_y) < filt_galvo_data.data[ind1] < self.mm_to_volt(
                         mm_range_values_to_keep[0] + tol_mm, x_or_y):
                     if self.mm_to_volt(mm_range_values_to_keep[1] - tol_mm, x_or_y) < filt_galvo_data.data[ind2] < self.mm_to_volt(

@@ -14,10 +14,10 @@ if __name__ == "__main__":
     from Pipe_And_Filter_Autosection.classes.AutoSectioner import AutoSectioner
 
     # inputs
-    num_cores = 2
+    num_cores = 1
     sub_cores = 4
-    plot = 0
-    directory = path.abspath(r'C:\Users\adl628\Desktop\2018_10_16_Surface_Fit\logs')
+    plot = 1
+    directory = path.abspath(r'C:\Users\LAMPS_SLS\Documents\Builds\Adam\2018_10_31 Curl Part\full_size_align_OCT\2_31_47 PM 10-31-2018')
     # blankA_bin_filepath = path.abspath(r'G:\OCT Data\2018_06_11_3PointBars_Constant_Power\blankA\4_32_12 PM 6-11-2018\data.bin')
     blankA_bin_filepath = None
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
             if plot:
                 galvo_data.plot()
-            auto_sectioner.autosection_data(alg_name='max_alignment', num_cores=sub_cores, raw_OCT=raw_OCT, galvo_data=galvo_data, OCT_sc=OCT_scan_config, OCT_param=OCT_parameters,
+            auto_sectioner.autosection_data(alg_name='left_to_right_only', num_cores=sub_cores, raw_OCT=raw_OCT, galvo_data=galvo_data, OCT_sc=OCT_scan_config, OCT_param=OCT_parameters,
                                             mod_OCT=mod_OCT, OCT_ec1000=OCT_ec1000, mod_OCT_param=mod_OCT_parameters, blankA=blankA)
         # print('hi')
         # except Exception as e:
